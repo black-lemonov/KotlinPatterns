@@ -47,18 +47,21 @@ class Student(
     var surname: String
         get() = _surname
         set(value) {
+            checkName(value)
             _surname = value
         }
 
     var name: String?
         get() = _name
         set(value) {
+            checkName(value)
             _name = value
         }
 
     var patronymic: String?
         get() = _patronymic
         set(value) {
+            checkName(value)
             _patronymic = value
         }
 
@@ -72,18 +75,21 @@ class Student(
     var tg: String?
         get() = _tg
         set(value) {
+            checkTg(value)
             _tg = value
         }
 
     var email: String?
         get() = _email
         set(value) {
+            checkEmail(value)
             _email = value
         }
 
     var giturl: String?
         get() = _giturl
         set(value) {
+            checkGit(value)
             _giturl = value
         }
 
@@ -93,14 +99,51 @@ class Student(
     }
 
     companion object {
-        private var phoneRegex = Regex("^\\+?[0-9]{11}\$")
+        private val nameRegex = Regex("^[А-Яа-яA-Za-z]+$")
+        private val tgRegex = Regex("^\\w+$")
+        private val emailRegex = Regex("^\\w+@\\w+\\.\\w+$")
+        private val gitRegex = Regex("^(https://) | (www\\.) git (hub) | (lab) \\.com/\\w+/?$")
+        private val phoneRegex = Regex("^\\+?\\d{11}$")
+
+        private val checkName = {
+            name: String? -> if (name != null) check(
+                nameRegex.matches(name)
+            ) {
+                "Ошибка! Имя содержит недопустимые символы."
+            }
+        }
+
+        private val checkTg = {
+            tg: String? -> if (tg != null) check(
+                tgRegex.matches(tg)
+            ) {
+                "Ошибка! Неверно указан телеграм студента."
+            }
+        }
+
+
+        private val checkEmail = {
+            email: String? -> if (email != null) check(
+                emailRegex.matches(email)
+            ) {
+                "Ошибка! Неверно указана почта студента."
+            }
+        }
+
+        private val checkGit = {
+            git: String? -> if (git != null) check(
+                gitRegex.matches(git)
+            ) {
+                "Ошибка! Неверно указан гит студента."
+            }
+        }
+
         private val checkPhone = {
-            phone: String? -> if (phone != null) require(
+            phone: String? -> if (phone != null) check(
                 phoneRegex.matches(phone)
             ) {
                 "Ошибка! Некорректный номер телефона: $phone."
             }
         }
-
     }
 }
