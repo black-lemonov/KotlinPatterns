@@ -27,7 +27,7 @@ class Student {
     - gitRegex: Regex$
     - phoneRegex: Regex$
     + Student(id: UInt, surname: String)
-    + Student(id: UInt, surname: String)
+    + Student(id: UInt, surname: String, name: String? = null, patronymic: String? = null, phone: String? = null, tg: String? = null, email: String? = null, giturl: String? = null)
     + Student(params: Map~String, Any?~)
     + toString() String
     + validate() Boolean
