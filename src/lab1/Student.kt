@@ -2,13 +2,7 @@ package lab1
 
 class Student(
     id: UInt,
-    surname: String,
-    name: String? = null,
-    patronymic: String? = null,
-    phone: String? = null,
-    tg: String? = null,
-    email: String? = null,
-    giturl: String? = null
+    surname: String
 ) {
     private val _id: UInt = id
     private var _surname: String = surname
@@ -18,6 +12,37 @@ class Student(
     private var _tg: String? = tg
     private var _email: String? = email
     private var _giturl: String? = giturl
+
+    constructor(
+        id: UInt,
+        surname: String,
+        name: String? = null,
+        patronymic: String? = null,
+        phone: String? = null,
+        tg: String? = null,
+        email: String? = null,
+        giturl: String? = null
+    ) : this(id, surname) {
+        _name = name
+        _patronymic = patronymic
+        _phone = phone
+        _tg = tg
+        _email = email
+        _giturl = giturl
+    }
+
+    constructor(
+        params: Map<String, Any?>
+    ) : this(
+        params["id"] as UInt,
+        params["surname"] as String,
+        params["name"] as? String,
+        params["patronymic"] as? String,
+        params["phone"] as? String,
+        params["tg"] as? String,
+        params["email"] as? String,
+        params["giturl"] as? String
+    )
 
     var surname: String
         get() = _surname
