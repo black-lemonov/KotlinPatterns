@@ -29,8 +29,8 @@ class Student {
     + Student(id: UInt, surname: String)
     + Student(id: UInt, surname: String)
     + Student(params: Map<String, Any?>)
-    + toString(): String
-    + validate(): Boolean
+    + toString() String
+    + validate() Boolean
     + setContact(pair: Pair<String, String?>) Unit
     - checkName(name: String?) Unit
     - checkTg(tg: String?) Unit
