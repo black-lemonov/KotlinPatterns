@@ -23,12 +23,12 @@ class Student(
         email: String? = null,
         giturl: String? = null
     ) : this(id, surname) {
-        _name = name
-        _patronymic = patronymic
-        _phone = phone
-        _tg = tg
-        _email = email
-        _giturl = giturl
+        this.name = name
+        this.patronymic = patronymic
+        this.phone = phone
+        this.tg = tg
+        this.email = email
+        this.giturl = giturl
     }
 
     constructor(
@@ -65,6 +65,7 @@ class Student(
     var phone: String?
         get() = _phone
         set(value) {
+            checkPhone(value)
             _phone = value
         }
 
@@ -89,5 +90,17 @@ class Student(
     override fun toString(): String {
         val fields = listOf(_id, _surname, _name, _patronymic, _phone, _tg, _email, _giturl)
         return fields.joinToString(" ") { f -> f?.toString() ?: "" }
+    }
+
+    companion object {
+        private var phoneRegex = Regex("^\\+?[0-9]{11}\$")
+        private val checkPhone = {
+            phone: String? -> if (phone != null) require(
+                phoneRegex.matches(phone)
+            ) {
+                "Ошибка! Некорректный номер телефона: $phone."
+            }
+        }
+
     }
 }
