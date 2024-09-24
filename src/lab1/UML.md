@@ -1,9 +1,9 @@
 ### Student.kt
 ```mermaid
-classDiagram
 ---
 Class Student
 ---
+classDiagram
 class Student {
     + id: UInt
     + surname: String
