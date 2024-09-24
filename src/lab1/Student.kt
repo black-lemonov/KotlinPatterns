@@ -6,12 +6,12 @@ class Student(
 ) {
     private val _id: UInt = id
     private var _surname: String = surname
-    private var _name: String? = name
-    private var _patronymic: String? = patronymic
-    private var _phone: String? = phone
-    private var _tg: String? = tg
-    private var _email: String? = email
-    private var _giturl: String? = giturl
+    private var _name: String? = null
+    private var _patronymic: String? = null
+    private var _phone: String? = null
+    private var _tg: String? = null
+    private var _email: String? = null
+    private var _giturl: String? = null
 
     constructor(
         id: UInt,
@@ -44,13 +44,6 @@ class Student(
         params["giturl"] as? String
     )
 
-    var surname: String
-        get() = _surname
-        set(value) {
-            checkName(value)
-            _surname = value
-        }
-
     var name: String?
         get() = _name
         set(value) {
@@ -63,6 +56,7 @@ class Student(
         set(value) {
             checkName(value)
             _patronymic = value
+            println("Отчество студента $_surname успешно установлено!")
         }
 
     var phone: String?
@@ -70,6 +64,7 @@ class Student(
         set(value) {
             checkPhone(value)
             _phone = value
+            println("Номер телефона студента $_surname успешно установлен!")
         }
 
     var tg: String?
@@ -77,6 +72,7 @@ class Student(
         set(value) {
             checkTg(value)
             _tg = value
+            println("Телеграм студента $_surname успешно установлен!")
         }
 
     var email: String?
@@ -84,6 +80,7 @@ class Student(
         set(value) {
             checkEmail(value)
             _email = value
+            println("Email студента $_surname успешно установлен!")
         }
 
     var giturl: String?
@@ -91,6 +88,7 @@ class Student(
         set(value) {
             checkGit(value)
             _giturl = value
+            println("Git студента $_surname успешно установлен!")
         }
 
     override fun toString(): String {
@@ -98,9 +96,25 @@ class Student(
         return fields.joinToString(" ") { f -> f?.toString() ?: "" }
     }
 
+    fun validate(): Boolean = (_giturl != null) and ((_tg != null) or (_email != null) or (_phone != null))
+
+    fun setContacts(pair: Pair<String, String?>) {
+        when (pair.first) {
+            "phone" -> this.phone = pair.second
+            "email" -> this.email = pair.second
+            "tg" -> this.tg = pair.second
+            "giturl" -> this.giturl = pair.second
+            else -> {
+                throw IllegalArgumentException(
+                    "Неизвестный тип контакта. Доступные контакты: phone, email, tg, giturl."
+                )
+            }
+        }
+    }
+
     companion object {
         private val nameRegex = Regex("^[А-Яа-яA-Za-z]+$")
-        private val tgRegex = Regex("^\\w+$")
+        private val tgRegex = Regex("^@?\\w+$")
         private val emailRegex = Regex("^\\w+@\\w+\\.\\w+$")
         private val gitRegex = Regex("^(https://) | (www\\.) git (hub) | (lab) \\.com/\\w+/?$")
         private val phoneRegex = Regex("^\\+?\\d{11}$")
@@ -109,7 +123,7 @@ class Student(
             name: String? -> if (name != null) check(
                 nameRegex.matches(name)
             ) {
-                "Ошибка! Имя содержит недопустимые символы."
+                "Ошибка! Имя должно содержать только буквы."
             }
         }
 
