@@ -21,21 +21,21 @@ class Student {
     - _tg: String? = null
     - _email: String? = null
     - _giturl: String? = null
-    - nameRegex: Regex
-    - tgRegex: Regex
-    - emailRegex: Regex
-    - gitRegex: Regex
-    - phoneRegex: Regex
+    - nameRegex: Regex$
+    - tgRegex: Regex$
+    - emailRegex: Regex$
+    - gitRegex: Regex$
+    - phoneRegex: Regex$
     + Student(id: UInt, surname: String)
     + Student(id: UInt, surname: String)
-    + Student(params: Map<String, Any?>)
+    + Student(params: Map~String, Any?~)
     + toString() String
     + validate() Boolean
-    + setContact(pair: Pair<String, String?>) Unit
-    - checkName(name: String?) Unit
-    - checkTg(tg: String?) Unit
-    - checkEmail(email: String?) Unit
-    - checkGit(git: String?) Unit
-    - checkPhone(phone: String?) Unit
+    + setContact(pair: Pair~String, String?~) Unit
+    - checkName(name: String?) Unit$
+    - checkTg(tg: String?) Unit$
+    - checkEmail(email: String?) Unit$
+    - checkGit(git: String?) Unit$
+    - checkPhone(phone: String?) Unit$
 }
 ```
