@@ -1,5 +1,7 @@
 package lab1
 
+import javax.lang.model.type.UnionType
+
 class Student(
     id: UInt,
     surname: String
@@ -43,6 +45,12 @@ class Student(
         params["email"] as? String,
         params["giturl"] as? String
     )
+
+    val id: UInt
+        get() = _id
+
+    val surname: String
+        get() = _surname
 
     var name: String?
         get() = _name
@@ -98,7 +106,7 @@ class Student(
 
     fun validate(): Boolean = (_giturl != null) and ((_tg != null) or (_email != null) or (_phone != null))
 
-    fun setContacts(pair: Pair<String, String?>) {
+    fun setContact(pair: Pair<String, String?>) {
         when (pair.first) {
             "phone" -> this.phone = pair.second
             "email" -> this.email = pair.second
