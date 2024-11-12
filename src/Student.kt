@@ -1,6 +1,5 @@
 package lab1
 
-import javax.lang.model.type.UnionType
 
 class Student(
     id: UInt,
@@ -44,6 +43,12 @@ class Student(
         params["tg"] as? String,
         params["email"] as? String,
         params["giturl"] as? String
+    )
+
+    constructor(
+        studentStr: String
+    ) : this (
+        parseString(studentStr)
     )
 
     val id: UInt
@@ -100,8 +105,15 @@ class Student(
         }
 
     override fun toString(): String {
-        val fields = listOf(_id, _surname, _name, _patronymic, _phone, _tg, _email, _giturl)
-        return fields.joinToString(" ") { f -> f?.toString() ?: "" }
+        return arrayOf(
+            _id,
+            _surname,
+            _name,
+            _patronymic,
+            _phone,
+            _tg,
+            _email,
+            _giturl).joinToString(",") { f -> f?.toString() ?: "" }
     }
 
     fun validate(): Boolean = (_giturl != null) and ((_tg != null) or (_email != null) or (_phone != null))
@@ -126,6 +138,12 @@ class Student(
         private val emailRegex = Regex("^\\w+@\\w+\\.\\w+$")
         private val gitRegex = Regex("^(https://) | (www\\.) git (hub) | (lab) \\.com/\\w+/?$")
         private val phoneRegex = Regex("^\\+?\\d{11}$")
+
+        private val fieldsArray = arrayOf(
+            "id",
+            "surname", "name", "patronymic", "phone",
+            "tg", "email", "giturl"
+        )
 
         private val checkName = {
             name: String? -> if (name != null) check(
@@ -166,6 +184,24 @@ class Student(
             ) {
                 "Ошибка! Некорректный номер телефона: $phone."
             }
+        }
+
+        fun convToType(key: String, valStr: String): Any? {
+            val typedVal = when (key) {
+                "id" -> valStr.toUInt()
+                in fieldsArray -> valStr.ifEmpty { null }
+                else -> throw IllegalArgumentException("Поле $key не найдено!!")
+            }
+            return typedVal
+        }
+
+        fun parseString(studentStr: String): Map<String, Any?>  {
+            val valuesList = studentStr.split(",")
+            var paramsMap = mutableMapOf<String, Any?>()
+            fieldsArray
+                .zip(valuesList)
+                .forEach { p -> paramsMap[p.first] = convToType(p.first, p.second) }
+            return paramsMap
         }
     }
 }
