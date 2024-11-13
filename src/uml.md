@@ -1,41 +1,49 @@
 ### Student.kt
 ```mermaid
 ---
-Class Student
+Лаб. 2
 ---
 classDiagram
+Student <|-- StudentShort
+Student --> MyUtil
 class Student {
-    + id: UInt
-    + surname: String
-    + name: String?
-    + patronymic: String?
-    + phone: String?
-    + tg: String?
-    + email: String?
-    + giturl: String?
-    - _id: UInt
-    - _surname: String
-    - _name: String? = null
-    - _patronymic: String? = null
-    - _phone: String? = null
-    - _tg: String? = null
-    - _email: String? = null
-    - _giturl: String? = null
-    - nameRegex: Regex
-    - tgRegex: Regex
-    - emailRegex: Regex
-    - gitRegex: Regex
-    - phoneRegex: Regex
-    + Student(id: UInt, surname: String)
-    + Student(id: UInt, surname: String)
-    + Student(params: Map<String, Any?>)
-    + toString(): String
-    + validate(): Boolean
-    + setContact(pair: Pair<String, String?>) Unit
-    - checkName(name: String?) Unit
-    - checkTg(tg: String?) Unit
-    - checkEmail(email: String?) Unit
-    - checkGit(git: String?) Unit
-    - checkPhone(phone: String?) Unit
+    +UInt id
+    +String surname
+    +String name
+    +String git
+    +String? patronymic
+    +String? phone
+    +String? tg
+    +String? email
+    +String contacts
+    +String initials
+    +Student(id: UInt, surname: String, name: String, git: Student)
+    +Student(id: UInt, surname: String, name: String, git: String, patronymic: String? = null, phone: String? = null, tg: String? = null, email: String? = null)
+    +Student(studentParams: Map~String,Any?~)
+    +Student(studentInfo: String)
+    +toString() String
+    +getInfo() String
+    #List~String~ fields$
+    #parseInfo(studentInfo: String)$ Map~Any~
+}
+class StudentShort {
+    +StudentShort(id: UInt, studentInfo: String)
+    -toStudentParams(id: UInt, studentInfo: String)$ Map~Any~
+    -parseInfo(studentInfo: String)$ Map~Any~
+}
+class MyUtil {
+    +Regex NAME_REGEX$
+    +Regex TG_REGEX$
+    +Regex EMAIL_REGEX$
+    +Regex GIT_REGEX$
+    +Regex PHONE_REGEX$
+    +checkSurname(surname: String)$ Boolean
+    +checkName(name: String)$ Boolean
+    +checkPatronymic(patronymic: String?)$ Boolean
+    +checkGit(git: String)$ Boolean
+    +checkTg(tg: String)$ Boolean
+    +checkEmail(email: String)$ Boolean
+    +checkPhone(phone: String)$ Boolean
+    +convToType(field: String, fieldVal: String, fields: Iterable~String~)$ Any
 }
 ```
