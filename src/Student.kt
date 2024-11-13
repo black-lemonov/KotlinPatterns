@@ -1,49 +1,64 @@
-package lab1
 
+open class Student {
+    private val _id: UInt
+    private var _surname: String
+    private var _name: String
+    private var _git: String
 
-class Student(
-    id: UInt,
-    name: String,
-    surname: String
-) {
-    private val _id: UInt = id
-    private var _surname: String = surname
-    private var _name: String = name
+    constructor(id: UInt, surname: String, name: String, git: String) {
+        _id = id
+        if (!checkName(surname)) {
+            throw IllegalArgumentException(
+                "Ошибка при создании: фамилия должно содержать только буквы"
+            )
+        }
+        _surname = surname
+        if (!checkName(name)) {
+            throw IllegalArgumentException(
+                "Ошибка при создании: имя должно содержать только буквы"
+            )
+        }
+        _name = name
+        if (!checkGit(git)) {
+            throw IllegalArgumentException(
+                "Ошибка при создании: git задан неправильно"
+            )
+        }
+        _git = git
+    }
+
     private var _patronymic: String? = null
     private var _phone: String? = null
     private var _tg: String? = null
     private var _email: String? = null
-    private var _giturl: String? = null
 
     constructor(
         id: UInt,
         surname: String,
         name: String,
+        git: String,
         patronymic: String? = null,
         phone: String? = null,
         tg: String? = null,
         email: String? = null,
-        giturl: String? = null
-    ) : this(id, name, surname) {
-        this.name = name
+    ) : this(id, surname, name, git) {
         this.patronymic = patronymic
         this.phone = phone
         this.tg = tg
         this.email = email
-        this.giturl = giturl
     }
 
     constructor(
         params: Map<String, Any?>
     ) : this(
         params["id"] as UInt,
-        params["name"] as String,
         params["surname"] as String,
+        params["name"] as String,
+        params["git"] as String,
         params["patronymic"] as? String,
         params["phone"] as? String,
         params["tg"] as? String,
         params["email"] as? String,
-        params["giturl"] as? String
     )
 
     constructor(
@@ -58,65 +73,83 @@ class Student(
     val surname: String
         get() = _surname
 
-    var name: String
+    val name: String
         get() = _name
-        set(value) {
-            checkName(value)
-            _name = value
-        }
+
+    val git: String
+        get() = _git
 
     var patronymic: String?
         get() = _patronymic
         set(value) {
-            checkName(value)
-            _patronymic = value
-            println("Отчество студента $_surname успешно установлено!")
+            if (checkName(value)) {
+                _patronymic = value
+            } else {
+                println("Ошибка: отчество задано неправильно")
+            }
         }
 
     var phone: String?
         get() = _phone
         set(value) {
-            checkPhone(value)
-            _phone = value
-            println("Номер телефона студента $_surname успешно установлен!")
+            if (checkPhone(value)) {
+                _phone = value
+            } else {
+                println(
+                    "Ошибка: телефон задан неправильно (поддерживаются только российские номера)"
+                )
+            }
         }
 
     var tg: String?
         get() = _tg
         set(value) {
-            checkTg(value)
-            _tg = value
-            println("Телеграм студента $_surname успешно установлен!")
+            if (checkTg(value)) {
+                _tg = value
+            } else {
+                println("Ошибка: тг задан неправильно")
+            }
         }
 
     var email: String?
         get() = _email
         set(value) {
-            checkEmail(value)
-            _email = value
-            println("Email студента $_surname успешно установлен!")
+           if (checkEmail(value)) {
+               _email = value
+           } else {
+               println("Ошибка: почта задана неправильно")
+           }
         }
 
-    var giturl: String?
-        get() = _giturl
-        set(value) {
-            checkGit(value)
-            _giturl = value
-            println("Git студента $_surname успешно установлен!")
-        }
-
-    val contacts: String
+    var contacts: String
         get() {
-            if (!phone.isNullOrEmpty()) {
-                return "Тел: ${phone.toString()}"
+            return when {
+                !phone.isNullOrEmpty() -> "тел: ${phone.toString()}"
+                !tg.isNullOrEmpty() -> "тг: ${tg.toString()}"
+                !email.isNullOrEmpty() -> "почта: ${email.toString()}"
+                else -> "отсутствуют"
             }
-            if (!tg.isNullOrEmpty()) {
-                return "Тг: ${tg.toString()}"
+        }
+        set(value: String) {
+            if (value == "отсутствуют") {
+                _phone = null
+                _tg = null
+                _email = null
+                return
             }
-            if (!email.isNullOrEmpty()) {
-                return "Почта: ${email.toString()}"
+            val (prefix, postfix) = value.split(" ")
+            when {
+                prefix == "тел:" && checkPhone(postfix) -> _phone = postfix
+                prefix == "тг:" && checkTg(postfix) -> _tg = tg
+                prefix == "почта:" && checkEmail(postfix) -> _email = email
+                else -> throw IllegalArgumentException("Ошибка: выбран неизвестный контакт или неверное значение")
             }
-            return "Контакты отсутствуют"
+        }
+
+    val initials: String
+        get() {
+            val patron = if (patronymic.isNullOrEmpty()) "" else patronymic.toString()
+            return arrayOf(surname, name, patron).joinToString(" ")
         }
 
     override fun toString(): String {
@@ -128,99 +161,33 @@ class Student(
             _phone,
             _tg,
             _email,
-            _giturl).joinToString(",") { f -> f?.toString() ?: "" }
+            _git).joinToString(",") { f -> f?.toString() ?: "" }
     }
 
     fun getInfo(): String {
         return """Информация о студенте #$id
-            |ФИО: $surname $name ${if (patronymic.isNullOrEmpty()) "" else patronymic.toString()}
-            |Гит: $giturl
+            |ФИО: $initials
+            |Гит: $git
             |$contacts""".trimMargin()
     }
 
-    fun setContact(pair: Pair<String, String?>) {
-        when (pair.first) {
-            "phone" -> this.phone = pair.second
-            "email" -> this.email = pair.second
-            "tg" -> this.tg = pair.second
-            "giturl" -> this.giturl = pair.second
-            else -> {
-                throw IllegalArgumentException(
-                    "Неизвестный тип контакта. Доступные контакты: phone, email, tg, giturl."
-                )
-            }
-        }
-    }
-
     companion object {
-        private val nameRegex = Regex("^[А-Яа-яA-Za-z]+$")
-        private val tgRegex = Regex("^@?\\w+$")
-        private val emailRegex = Regex("^\\w+@\\w+\\.\\w+$")
-        private val gitRegex = Regex("^(git@|https://|http://|ssh://)([a-zA-Z0-9._-]+)(:[0-9]+)?(/.+|.[^.]+)\\.git\$")
-        private val phoneRegex = Regex("^\\+?\\d{11}$")
-
-        private val fieldsArray = arrayOf(
+        protected val fields = listOf(
             "id",
-            "surname", "name", "patronymic", "phone",
-            "tg", "email", "giturl"
+            "surname",
+            "name",
+            "git",
+            "patronymic",
+            "phone",
+            "tg",
+            "email"
         )
 
-        private val checkName = {
-            name: String? -> if (name != null) check(
-                nameRegex.matches(name)
-            ) {
-                "Ошибка! Имя должно содержать только буквы."
-            }
-        }
-
-        private val checkTg = {
-            tg: String? -> if (tg != null) check(
-                tgRegex.matches(tg)
-            ) {
-                "Ошибка! Неверно указан телеграм студента."
-            }
-        }
-
-
-        private val checkEmail = {
-            email: String? -> if (email != null) check(
-                emailRegex.matches(email)
-            ) {
-                "Ошибка! Неверно указана почта студента."
-            }
-        }
-
-        private val checkGit = {
-            git: String? -> if (git != null) check(
-                gitRegex.matches(git)
-            ) {
-                "Ошибка! Неверно указан гит студента."
-            }
-        }
-
-        private val checkPhone = {
-            phone: String? -> if (phone != null) check(
-                phoneRegex.matches(phone)
-            ) {
-                "Ошибка! Некорректный номер телефона: $phone."
-            }
-        }
-
-        fun convToType(key: String, valStr: String): Any? {
-            val typedVal = when (key) {
-                "id" -> valStr.toUInt()
-                in fieldsArray -> valStr.ifEmpty { null }
-                else -> throw IllegalArgumentException("Поле $key не найдено!!")
-            }
-            return typedVal
-        }
-
-        fun parseString(studentStr: String): Map<String, Any?>  {
+        protected fun parseString(studentStr: String): Map<String, Any?>  {
             val valuesList = studentStr.split(",")
-            var paramsMap = mutableMapOf<String, Any?>()
-            fieldsArray
-                .zip(valuesList)
-                .forEach { p -> paramsMap[p.first] = convToType(p.first, p.second) }
+            val paramsMap = mutableMapOf<String, Any?>()
+            fields.zip(valuesList)
+                  .forEach { (k, v) -> paramsMap[k] = convToType(k, v, fields) }
             return paramsMap
         }
     }

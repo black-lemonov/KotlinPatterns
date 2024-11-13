@@ -43,5 +43,3 @@ fun convToType(key: String, valStr: String, haystack: Iterable<String>): Any? {
     }
     return typedVal
 }
-
-

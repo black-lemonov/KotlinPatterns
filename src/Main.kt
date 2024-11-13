@@ -1,8 +1,17 @@
-package lab1
 
 fun main() {
-    val objs = listOf(Student(1u, "Masodov"), Student(2u, "Sorokin"), Student(3u, "Elizarov"))
-    val d = Student(4u, "Danilov")
-    d.phone = "+79183729902"
-    d.setContact(Pair("tg", "@eeeee"))
+    val ivanov = Student(
+        4u,
+        "Ivanov",
+        "Ivan",
+        "http://github.com/user/repo.git",
+        "Ivanovich",
+        "72931830284",
+        "@megabrawl",
+        "ivan2003rus@mail.ru"
+    )
+    println(ivanov)
+    println(ivanov.getInfo())
+    val iv = StudentShort(3u, "Ivanov Ivan,http://github.com/user/repo.git,тел: 72931830284")
+    println(iv)
 }
