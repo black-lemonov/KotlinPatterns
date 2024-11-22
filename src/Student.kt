@@ -75,9 +75,50 @@ class Student(
         params["name"] as String,
         params["lastname"] as String,
         params.getOrDefault("phone", null) as String?,
+        params.getOrDefault("tg", null) as String?,
         params.getOrDefault("email", null) as String?,
         params.getOrDefault("git", null) as String?
     )
+
+    constructor(
+        params: String
+    ) : this(
+        listOf("id", "surname", "name", "lastname", "phone", "tg", "email", "git")
+            .zip(params.split(','))
+            .toMap()
+    )
+
+    fun getInfo() : String {
+        return "${getSurname()}; ${getInitials()}; ${getGit()};${getContacts()}"
+    }
+
+    fun getSurname() : String {
+        return surname
+    }
+
+    fun getInitials() : String {
+        return "${name.uppercase().first()}. ${surname.uppercase().first()}"
+    }
+
+    fun getGit() : String {
+        if (git != null) {
+            return "git: $git"
+        }
+        return ""
+    }
+
+    fun getContacts() : String {
+        if (phone != null) {
+            return "тел: $phone"
+        }
+        if (tg != null) {
+            return "тг: $tg"
+        }
+        if (email != null) {
+            return "почта: $email"
+        }
+        return ""
+    }
 
     fun setContacts(
         phone: String? = null,
