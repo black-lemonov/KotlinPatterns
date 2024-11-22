@@ -1,22 +1,30 @@
-class Student {
-    private var _id : UInt?
-    private var _surname : String
-    private var _name : String
-    private var _lastname : String
-    private var _phone : String?
-    private var _tg : String?
-    private var _email : String?
-    private var _git : String?
+class Student(
+    surname: String,
+    name: String,
+    lastname: String
+) {
+    private var _id : UInt? = null
+    private var _surname : String = surname
+    private var _name : String = name
+    private var _lastname : String = lastname
+    private var _phone : String? = null
+    private var _tg : String? = null
+    private var _email : String? = null
+    private var _git : String? = null
 
     constructor(
-        id : UInt?,
+        id : UInt? = null,
         surname : String,
         name : String,
         lastname : String,
-        phone : String?,
-        tg : String?,
-        email : String?,
-        git : String?
+        phone : String? = null,
+        tg : String? = null,
+        email : String? = null,
+        git : String? = null
+    ) : this(
+        surname,
+        name,
+        lastname
     ) {
         _id = id
         _surname = surname
@@ -29,7 +37,7 @@ class Student {
     }
 
     var id : UInt?
-        get() = id
+        get() = _id
         set(value) {
             _id = value
         }
