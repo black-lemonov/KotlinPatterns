@@ -3,7 +3,7 @@ class Student(
     surname: String,
     name: String,
     lastname: String
-) {
+) : StudentBase() {
     private var _id : UInt? = null
     private var _surname : String
     private var _name : String
@@ -61,42 +61,54 @@ class Student(
 
    private fun hasGit() : Boolean {
         return git != null
-    }
+   }
 
     private fun hasContact() : Boolean {
         return listOf(phone, tg, email).any {it != null}
     }
 
     constructor(
-        params: Map<String, Any>
+        params: Map<String, Any?>
     ) : this(
-        params.getOrDefault("id", null) as UInt?,
+        params.getOrDefault("id", null) as? UInt,
         params["surname"] as String,
         params["name"] as String,
         params["lastname"] as String,
-        params.getOrDefault("phone", null) as String?,
-        params.getOrDefault("tg", null) as String?,
-        params.getOrDefault("email", null) as String?,
-        params.getOrDefault("git", null) as String?
+        params.getOrDefault("phone", null) as? String,
+        params.getOrDefault("tg", null) as? String,
+        params.getOrDefault("email", null) as? String,
+        params.getOrDefault("git", null) as? String
     )
 
     constructor(
         params: String
     ) : this(
         listOf("id", "surname", "name", "lastname", "phone", "tg", "email", "git")
-            .zip(params.split(','))
+            .zip(
+                params.split(',').map {it.ifEmpty {null} }
+            )
             .toMap()
     )
 
-    fun getInfo() : String {
-        return "$surname ${getInitials()}; $git; ${getContacts()}"
+    override fun toString(): String {
+        return listOf(id, surname, name, lastname, phone, tg, email, git)
+            .joinToString(",") {
+                it?.toString() ?: ""
+            }
     }
 
-    private fun getInitials() : String {
-        return "${name.uppercase().first()}.${surname.uppercase().first()}"
+    override fun getSurnameAndInitials() : String {
+        return "$surname ${name.uppercase().first()}.${surname.uppercase().first()}."
     }
 
-    private fun getContacts() : String {
+    override fun getGitInfo() : String {
+        if (git != null) {
+            return "git: $git"
+        }
+        return ""
+    }
+
+    override fun getContactsInfo() : String {
         if (phone != null) {
             return "тел: $phone"
         }
@@ -165,10 +177,7 @@ class Student(
         }
     var git : String?
         get() {
-            if (_git != null) {
-                return "git: $_git"
-            }
-            return ""
+            return _git
         }
         set(value) {
             _git = value
@@ -176,10 +185,10 @@ class Student(
 
     companion object {
         val PART_OF_NAME_REGEX = Regex("^[А-Яа-яA-Za-z]+$")
-        val PHONE_REGEX = Regex("^(\\+7|8)\\s*\\(?\\d{3}\\)?\\s*\\d{3}[- ]?\\d{2}[- ]?\\d{2}\$\n")
-        val TG_REGEX = Regex("^(https://t\\.me/[a-zA-Z0-9_]+|tg://resolve\\?domain=[a-zA-Z0-9_]+)$\n")
-        val EMAIL_REGEX = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$\n")
-        val GIT_REGEX = Regex("^(https://(www\\.)?(github\\.com|gitlab\\.com)/[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+)$\n")
+        val PHONE_REGEX = Regex("^(\\+7|8)\\s*\\(?\\d{3}\\)?\\s*\\d{3}[- ]?\\d{2}[- ]?\\d{2}\$")
+        val TG_REGEX = Regex("^(https://t\\.me/[a-zA-Z0-9_]+|tg://resolve\\?domain=[a-zA-Z0-9_]+)$")
+        val EMAIL_REGEX = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
+        val GIT_REGEX = Regex("^(https://(www\\.)?(github\\.com|gitlab\\.com)/[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+)$")
 
         fun checkSurname(surname: String) {
             check(PART_OF_NAME_REGEX.matches(surname)) {
