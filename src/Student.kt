@@ -51,19 +51,19 @@ class Student(
         validate()
     }
 
-    fun validate() {
+    private fun validate() {
         check(
             this.hasGit() && this.hasContact()
         ) {
-            "Необходимо указать "
+            "Необходимо указать гит и один из контактов!"
         }
     }
 
-    fun hasGit() : Boolean {
+   private fun hasGit() : Boolean {
         return git != null
     }
 
-    fun hasContact() : Boolean {
+    private fun hasContact() : Boolean {
         return listOf(phone, tg, email).any {it != null}
     }
 
@@ -89,25 +89,14 @@ class Student(
     )
 
     fun getInfo() : String {
-        return "${getSurname()}; ${getInitials()}; ${getGit()};${getContacts()}"
+        return "$surname ${getInitials()}; $git; ${getContacts()}"
     }
 
-    fun getSurname() : String {
-        return surname
+    private fun getInitials() : String {
+        return "${name.uppercase().first()}.${surname.uppercase().first()}"
     }
 
-    fun getInitials() : String {
-        return "${name.uppercase().first()}. ${surname.uppercase().first()}"
-    }
-
-    fun getGit() : String {
-        if (git != null) {
-            return "git: $git"
-        }
-        return ""
-    }
-
-    fun getContacts() : String {
+    private fun getContacts() : String {
         if (phone != null) {
             return "тел: $phone"
         }
@@ -175,13 +164,18 @@ class Student(
             _email = value
         }
     var git : String?
-        get() = _git
+        get() {
+            if (_git != null) {
+                return "git: $_git"
+            }
+            return ""
+        }
         set(value) {
             _git = value
         }
 
     companion object {
-        val PART_OF_NAME_REGEX = Regex("^[А-Яа-я]$")
+        val PART_OF_NAME_REGEX = Regex("^[А-Яа-яA-Za-z]+$")
         val PHONE_REGEX = Regex("^(\\+7|8)\\s*\\(?\\d{3}\\)?\\s*\\d{3}[- ]?\\d{2}[- ]?\\d{2}\$\n")
         val TG_REGEX = Regex("^(https://t\\.me/[a-zA-Z0-9_]+|tg://resolve\\?domain=[a-zA-Z0-9_]+)$\n")
         val EMAIL_REGEX = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$\n")
