@@ -1,3 +1,5 @@
+package students
+
 class Student_short : StudentBase {
     private val _id : UInt?
     private val _surnameAndInitials : String

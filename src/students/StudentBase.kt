@@ -1,3 +1,5 @@
+package students
+
 abstract class StudentBase {
     fun getInfo() : String {
         return "${getId()}${getSurnameAndInitials()};${getGitInfo()};${getContactsInfo()}"

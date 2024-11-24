@@ -1,7 +1,7 @@
+package students
+
 import java.io.File
 import java.io.FileNotFoundException
-import kotlin.io.path.Path
-import kotlin.io.path.exists
 
 fun main() {
 

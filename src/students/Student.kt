@@ -1,4 +1,4 @@
-
+package students
 class Student(
     surname: String,
     name: String,

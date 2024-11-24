@@ -1,3 +1,5 @@
+package template
+
 class Data_list_student_short(
     data : List<Student_short>
 ) : Data_list() {

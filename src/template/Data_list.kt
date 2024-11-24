@@ -1,3 +1,5 @@
+package template
+
 abstract class Data_list {
     abstract fun select(index : Int)
 
