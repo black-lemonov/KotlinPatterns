@@ -1,7 +1,5 @@
 package students
 
-import kotlinx.serialization.Serializable
-
 @Serializable
 class Student(
     surname: String,

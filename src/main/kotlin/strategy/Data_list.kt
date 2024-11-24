@@ -1,4 +1,6 @@
-package template
+package strategy
+
+import template.Data_table
 
 abstract class Data_list {
     abstract fun select(index : Int)

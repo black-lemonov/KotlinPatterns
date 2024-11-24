@@ -10,7 +10,7 @@ class StudentTxtReader : StudentFileReader {
         if (!file.exists()) {
             throw FileNotFoundException("Неверный путь к файлу: $filepath")
         }
-        return file.readLines().map {Student(it)}
+        return file.readLines().map { Student(it) }
     }
 
     override fun writeToFile(filepath: String, students: List<Student>) {

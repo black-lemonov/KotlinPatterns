@@ -1,31 +1,33 @@
-package students
+package strategy
 
-import template.Data_list
-import template.Data_list_student_short
 import java.io.File
 import java.io.FileNotFoundException
 import kotlin.math.max
 
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.encodeToString
+import students.Student
+import students.Student_short
+import template.Data_list_student_short
 
-class Students_list_txt {
+
+class Students_list_JSON {
     private var _data : MutableList<Student> = mutableListOf()
 
-    fun read_from_txt(filepath : String) {
+    fun read_from_json(filepath : String) {
         val file = File(filepath)
         if (!file.exists()) {
             throw FileNotFoundException("Неверный путь к файлу: $filepath")
         }
-        _data.clear()
-        file.readLines()
-            .forEach {
-                _data.add(Student(it))
-            }
+        _data = Json.decodeFromString<MutableList<Student>>(
+            file.readText()
+        )
     }
 
-    fun write_to_txt(destpath: String) {
+    fun write_to_json(destpath: String) {
         val file = File(destpath)
         file.writeText(
-            _data.joinToString("\n") { it.toString() }
+            Json.encodeToString(_data)
         )
     }
 
@@ -52,22 +54,22 @@ class Students_list_txt {
         _data.sort()
     }
 
-    fun addStudent(newStudent: Student) {
+    fun add(newStudent: Student) {
         val maxId = _data.mapNotNull { it.getId() }.max()
-        addStudent(newStudent, maxId + 1u)
+        add(newStudent, maxId + 1u)
     }
 
-    private fun addStudent(newStudent: Student, id: UInt) {
+    private fun add(newStudent: Student, id: UInt) {
         newStudent.setId(id)
         _data.add(newStudent)
     }
 
-    fun updateStudent(newStudent: Student, id: UInt) {
-        deleteStudent(id)
-        addStudent(newStudent, id)
+    fun replaceWhere(newStudent: Student, id: UInt) {
+        deleteWhere(id)
+        add(newStudent, id)
     }
 
-    fun deleteStudent(id: UInt) {
+    fun deleteWhere(id: UInt) {
         _data.removeIf { it.getId() == id }
     }
 

@@ -1,16 +1,14 @@
-package students
+package strategy
 
-import template.Data_list
+import students.Student
+import students.Student_short
 import template.Data_list_student_short
 import java.io.File
 import java.io.FileNotFoundException
 import kotlin.math.max
-import com.charleskorn.kaml.Yaml
-import com.charleskorn.kaml.decodeFromStream
-import kotlinx.serialization.encodeToString
 
 
-class Students_list_YAML {
+class Students_list_txt {
     private var _data : MutableList<Student> = mutableListOf()
 
     fun read_from_txt(filepath : String) {
@@ -18,15 +16,17 @@ class Students_list_YAML {
         if (!file.exists()) {
             throw FileNotFoundException("Неверный путь к файлу: $filepath")
         }
-        _data = Yaml.default.decodeFromStream(
-            file.inputStream()
-        )
+        _data.clear()
+        file.readLines()
+            .forEach {
+                _data.add(Student(it))
+            }
     }
 
     fun write_to_txt(destpath: String) {
         val file = File(destpath)
         file.writeText(
-            Yaml.default.encodeToString(_data)
+            _data.joinToString("\n") { it.toString() }
         )
     }
 

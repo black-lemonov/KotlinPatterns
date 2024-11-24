@@ -1,6 +1,7 @@
 package template
 
 import students.Student_short
+import strategy.Data_list
 
 class Data_list_student_short(
     data : List<Student_short>

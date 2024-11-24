@@ -1,10 +1,8 @@
-package strategy
+package students
 
-import students.Student
-import students.Student_short
 import strategy.readers.StudentFileReader
 import strategy.readers.StudentTxtReader
-import template.Data_list
+import strategy.Data_list
 import template.Data_list_student_short
 import kotlin.math.max
 
