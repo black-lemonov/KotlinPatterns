@@ -48,26 +48,26 @@ class Students_list_txt {
         )
     }
 
-    fun sortBySurnameAndInitials() {
+    fun orderBySurnameAndInitials() {
         _data.sort()
     }
 
-    fun add(newStudent: Student) {
+    fun addStudent(newStudent: Student) {
         val maxId = _data.mapNotNull { it.getId() }.max()
-        add(newStudent, maxId + 1u)
+        addStudent(newStudent, maxId + 1u)
     }
 
-    private fun add(newStudent: Student, id: UInt) {
+    private fun addStudent(newStudent: Student, id: UInt) {
         newStudent.setId(id)
         _data.add(newStudent)
     }
 
-    fun replaceWhere(newStudent: Student, id: UInt) {
-        deleteWhere(id)
-        add(newStudent, id)
+    fun updateStudent(newStudent: Student, id: UInt) {
+        deleteStudent(id)
+        addStudent(newStudent, id)
     }
 
-    fun deleteWhere(id: UInt) {
+    fun deleteStudent(id: UInt) {
         _data.removeIf { it.getId() == id }
     }
 
