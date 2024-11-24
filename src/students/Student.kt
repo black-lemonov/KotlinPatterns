@@ -1,9 +1,11 @@
 package students
+
+
 class Student(
     surname: String,
     name: String,
     lastname: String
-) : StudentBase() {
+) : StudentBase(), Comparable<Student> {
     private var _id : UInt? = null
     private var _surname : String
     private var _name : String
@@ -101,6 +103,10 @@ class Student(
         return _id
     }
 
+    override fun setId(id: UInt?) {
+        _id = id
+    }
+
     override fun getSurnameAndInitials() : String {
         return "$_surname ${_name.uppercase().first()}.${_surname.uppercase().first()}."
     }
@@ -141,6 +147,16 @@ class Student(
         if (email != null) {
             checkEmail(email)
             _email = email
+        }
+    }
+
+    override fun compareTo(other: Student): Int {
+        return if (this.getSurnameAndInitials() > other.getSurnameAndInitials()) {
+            1
+        } else if (this.getSurnameAndInitials() == other.getSurnameAndInitials()) {
+            0
+        } else {
+            -1
         }
     }
 

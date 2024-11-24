@@ -1,7 +1,7 @@
 package students
 
 class Student_short : StudentBase {
-    private val _id : UInt?
+    private var _id : UInt?
     private val _surnameAndInitials : String
     private val _git : String?
     private val _contacts : String?
@@ -30,6 +30,10 @@ class Student_short : StudentBase {
 
     override fun getId(): UInt? {
         return _id
+    }
+
+    override fun setId(id: UInt?) {
+        _id = id
     }
 
     override fun getSurnameAndInitials(): String {
