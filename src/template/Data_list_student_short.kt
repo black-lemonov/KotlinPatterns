@@ -1,5 +1,7 @@
 package template
 
+import students.Student_short
+
 class Data_list_student_short(
     data : List<Student_short>
 ) : Data_list() {
@@ -10,15 +12,13 @@ class Data_list_student_short(
         require(index > 0 && index <= _data.size) {
             "Нет такого номера!"
         }
+        _selected.add(index)
     }
 
     override fun get_selected(): List<Int> {
         return _selected as List<Int>
     }
 
-    override fun getNamesWithoutID(): List<String> {
-        return listOf("Фамилия И.О.", "Гит", "Контакт. инф.")
-    }
     override fun getId(index: Int): Any {
         return _data[index].getId() as Any
     }
