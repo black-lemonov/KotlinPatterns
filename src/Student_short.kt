@@ -22,9 +22,13 @@ class Student_short : StudentBase {
     constructor(
         student : Student
     ) : this(
-        student.id,
+        student.getId(),
         student.getInfo()
     )
+
+    override fun getId(): UInt? {
+        return _id
+    }
 
     override fun getSurnameAndInitials(): String {
         return _surnameAndInitials

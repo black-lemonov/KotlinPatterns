@@ -60,11 +60,11 @@ class Student(
     }
 
    private fun hasGit() : Boolean {
-        return git != null
+        return _git != null
    }
 
     private fun hasContact() : Boolean {
-        return listOf(phone, tg, email).any {it != null}
+        return listOf(_phone, _tg, _email).any {it != null}
     }
 
     constructor(
@@ -91,32 +91,36 @@ class Student(
     )
 
     override fun toString(): String {
-        return listOf(id, surname, name, lastname, phone, tg, email, git)
+        return listOf(_id, _surname, _name, _lastname, _phone, _tg, _email, _git)
             .joinToString(",") {
                 it?.toString() ?: ""
             }
     }
 
+    override fun getId(): UInt? {
+        return _id
+    }
+
     override fun getSurnameAndInitials() : String {
-        return "$surname ${name.uppercase().first()}.${surname.uppercase().first()}."
+        return "$_surname ${_name.uppercase().first()}.${_surname.uppercase().first()}."
     }
 
     override fun getGitInfo() : String {
-        if (git != null) {
-            return "git: $git"
+        if (_git != null) {
+            return "git: $_git"
         }
         return ""
     }
 
     override fun getContactsInfo() : String {
-        if (phone != null) {
-            return "тел: $phone"
+        if (_phone != null) {
+            return "тел: $_phone"
         }
-        if (tg != null) {
-            return "тг: $tg"
+        if (_tg != null) {
+            return "тг: $_tg"
         }
-        if (email != null) {
-            return "почта: $email"
+        if (_email != null) {
+            return "почта: $_email"
         }
         return ""
     }
@@ -139,49 +143,6 @@ class Student(
             _email = email
         }
     }
-
-    var id : UInt?
-        get() = _id
-        set(value) {
-            _id = value
-        }
-    var surname : String
-        get() = _surname
-        set(value) {
-            _surname = value
-        }
-    var name : String
-        get() = _name
-        set(value) {
-            _name = value
-        }
-    var lastname : String
-        get() = _lastname
-        set(value) {
-            _lastname = value
-        }
-    var phone : String?
-        get() = _phone
-        set(value) {
-            _phone = value
-        }
-    var tg : String?
-        get() = _tg
-        set(value) {
-            _tg = value
-        }
-    var email : String?
-        get() = _email
-        set(value) {
-            _email = value
-        }
-    var git : String?
-        get() {
-            return _git
-        }
-        set(value) {
-            _git = value
-        }
 
     companion object {
         val PART_OF_NAME_REGEX = Regex("^[А-Яа-яA-Za-z]+$")

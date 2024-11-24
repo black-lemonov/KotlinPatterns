@@ -1,11 +1,13 @@
 abstract class StudentBase {
     fun getInfo() : String {
-        return "${getSurnameAndInitials()};${getGitInfo()};${getContactsInfo()}"
+        return "${getId()}${getSurnameAndInitials()};${getGitInfo()};${getContactsInfo()}"
     }
 
-    protected abstract fun getSurnameAndInitials() : String
+    abstract fun getId() : UInt?
 
-    protected abstract fun getGitInfo() : String
+    abstract fun getSurnameAndInitials() : String
 
-    protected abstract fun getContactsInfo() : String
+    abstract fun getGitInfo() : String
+
+    abstract fun getContactsInfo() : String
 }
