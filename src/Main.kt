@@ -7,7 +7,7 @@ fun main() {
 
 }
 
-fun readFromTxt(filepath : String) : List<Student> {
+fun read_from_txt(filepath : String) : List<Student> {
     val file = File(filepath)
     if (!file.exists()) {
         throw FileNotFoundException("Неверный путь к файлу: $filepath")
@@ -17,7 +17,7 @@ fun readFromTxt(filepath : String) : List<Student> {
     }
 }
 
-fun writeToTxt(destpath: String, students: List<Student>) {
+fun write_to_txt(destpath: String, students: List<Student>) {
     val file = File(destpath)
     file.writeText(
         students.joinToString("\n") { it.toString() }
