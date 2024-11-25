@@ -1,55 +1,27 @@
 package students
 
+import kotlinx.serialization.Serializable
+
 @Serializable
 class Student(
-    surname: String,
-    name: String,
-    lastname: String
+    var id: UInt? = null,
+    var surname: String,
+    var name : String,
+    var lastname : String,
+    var phone : String? = null,
+    var tg : String? = null,
+    var email : String? = null,
+    var git : String? = null
 ) : StudentBase(), Comparable<Student> {
-    private var _id : UInt? = null
-    private var _surname : String
-    private var _name : String
-    private var _lastname : String
-    private var _phone : String? = null
-    private var _tg : String? = null
-    private var _email : String? = null
-    private var _git : String? = null
 
     init {
         checkSurname(surname)
         checkName(name)
         checkLastname(lastname)
-        _surname = surname
-        _name = name
-        _lastname = lastname
-    }
-
-    constructor(
-        id : UInt? = null,
-        surname : String,
-        name : String,
-        lastname : String,
-        phone : String? = null,
-        tg : String? = null,
-        email : String? = null,
-        git : String? = null
-    ) : this(
-        surname,
-        name,
-        lastname
-    ) {
         checkPhone(phone)
         checkTg(tg)
         checkEmail(email)
         checkGit(git)
-        _id = id
-        _surname = surname
-        _name = name
-        _lastname = lastname
-        _phone = phone
-        _tg = tg
-        _email = email
-        _git = git
         validate()
     }
 
@@ -62,11 +34,11 @@ class Student(
     }
 
    private fun hasGit() : Boolean {
-        return _git != null
+        return git != null
    }
 
     private fun hasContact() : Boolean {
-        return listOf(_phone, _tg, _email).any {it != null}
+        return listOf(phone, tg, email).any {it != null}
     }
 
     constructor(
@@ -93,60 +65,60 @@ class Student(
     )
 
     override fun toString(): String {
-        return listOf(_id, _surname, _name, _lastname, _phone, _tg, _email, _git)
+        return listOf(id, surname, name, lastname, phone, tg, email, git)
             .joinToString(",") {
                 it?.toString() ?: ""
             }
     }
 
     override fun getId(): UInt? {
-        return _id
+        return id
     }
 
-    override fun setId(id: UInt?) {
-        _id = id
+    override fun setId(newId: UInt?) {
+        id = newId
     }
 
     override fun getSurnameAndInitials() : String {
-        return "$_surname ${_name.uppercase().first()}.${_surname.uppercase().first()}."
+        return "$surname ${name.uppercase().first()}.${surname.uppercase().first()}."
     }
 
     override fun getGitInfo() : String {
-        if (_git != null) {
-            return "git: $_git"
+        if (git != null) {
+            return "git: $git"
         }
         return ""
     }
 
     override fun getContactsInfo() : String {
-        if (_phone != null) {
-            return "тел: $_phone"
+        if (phone != null) {
+            return "тел: $phone"
         }
-        if (_tg != null) {
-            return "тг: $_tg"
+        if (tg != null) {
+            return "тг: $tg"
         }
-        if (_email != null) {
-            return "почта: $_email"
+        if (email != null) {
+            return "почта: $email"
         }
         return ""
     }
 
     fun setContacts(
-        phone: String? = null,
-        tg: String? = null,
-        email: String? = null
+        phone_: String? = null,
+        tg_: String? = null,
+        email_: String? = null
     ) {
-        if (phone != null) {
-            checkPhone(phone)
-            _phone = phone
+        if (phone_ != null) {
+            checkPhone(phone_)
+            phone = phone_
         }
-        if (tg != null) {
-            checkTg(tg)
-            _tg = tg
+        if (tg_ != null) {
+            checkTg(tg_)
+            tg = tg_
         }
-        if (email != null) {
-            checkEmail(email)
-            _email = email
+        if (email_ != null) {
+            checkEmail(email_)
+            email = email_
         }
     }
 

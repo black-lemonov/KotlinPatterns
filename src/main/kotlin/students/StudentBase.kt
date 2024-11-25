@@ -7,7 +7,7 @@ abstract class StudentBase {
 
     abstract fun getId() : UInt?
 
-    abstract fun setId(id : UInt?)
+    abstract fun setId(newId : UInt?)
 
     abstract fun getSurnameAndInitials() : String
 

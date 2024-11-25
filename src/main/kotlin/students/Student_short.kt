@@ -32,8 +32,8 @@ class Student_short : StudentBase {
         return _id
     }
 
-    override fun setId(id: UInt?) {
-        _id = id
+    override fun setId(newId: UInt?) {
+        _id = newId
     }
 
     override fun getSurnameAndInitials(): String {
