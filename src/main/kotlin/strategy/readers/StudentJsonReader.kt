@@ -17,11 +17,4 @@ class StudentJsonReader : StudentFileReader {
         )
     }
 
-    override fun writeToFile(filepath: String, students: List<Student>) {
-        val file = File(filepath)
-        file.writeText(
-            Json.encodeToString(students)
-        )
-    }
-
 }

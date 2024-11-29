@@ -12,11 +12,4 @@ class StudentTxtReader : StudentFileReader {
         }
         return file.readLines().map { Student(it) }
     }
-
-    override fun writeToFile(filepath: String, students: List<Student>) {
-        val file = File(filepath)
-        file.writeText(
-            students.joinToString("\n") { it.toString() }
-        )
-    }
 }

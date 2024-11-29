@@ -1,9 +1,10 @@
 package template
 
-class Data_table(data: List<List<Any>>) {
-    private var _data: List<List<Any>> = data
+class DataTable(
+    private var data: List<List<Any?>>
+) {
 
-    fun get(row: Int, column: Int) : Any {
+    fun get(row: Int, column: Int) : Any? {
         require(row > 0 && column > 0) {
             "Номер строки/столбца должен быть > 0"
         }
@@ -11,12 +12,12 @@ class Data_table(data: List<List<Any>>) {
             "Таблица имеет меньший размер"
         }
 
-        return _data[row][column]
+        return data[row][column]
     }
 
     val rows : Int
-        get() = _data.size
+        get() = data.size
 
     val columns : Int
-        get() = _data.first().size
+        get() = data.first().size
 }

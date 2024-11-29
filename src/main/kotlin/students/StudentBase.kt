@@ -1,17 +1,14 @@
 package students
 
 abstract class StudentBase {
+    abstract val id: UInt
+    abstract val git: String?
+
     fun getInfo() : String {
-        return "${getSurnameAndInitials()};${getGitInfo()};${getContactsInfo()}"
+        return "$id;${getSurnameAndInitials()};${git ?: ""};${getContactsInfo()}"
     }
 
-    abstract fun getId() : UInt?
-
-    abstract fun setId(newId : UInt?)
-
     abstract fun getSurnameAndInitials() : String
-
-    abstract fun getGitInfo() : String
 
     abstract fun getContactsInfo() : String
 }

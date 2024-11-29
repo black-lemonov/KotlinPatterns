@@ -18,10 +18,4 @@ class StudentYamlReader : StudentFileReader {
         )
     }
 
-    override fun writeToFile(filepath: String, students: List<Student>) {
-        val file = File(filepath)
-        file.writeText(
-            Yaml.default.encodeToString(students)
-        )
-    }
 }

@@ -4,14 +4,14 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class Student(
-    var id: UInt? = null,
+    override var id: UInt,
     var surname: String,
     var name : String,
     var lastname : String,
     var phone : String? = null,
     var tg : String? = null,
     var email : String? = null,
-    var git : String? = null
+    override var git : String? = null
 ) : StudentBase(), Comparable<Student> {
 
     init {
@@ -22,15 +22,6 @@ class Student(
         checkTg(tg)
         checkEmail(email)
         checkGit(git)
-        validate()
-    }
-
-    private fun validate() {
-        check(
-            this.hasGit() && this.hasContact()
-        ) {
-            "Необходимо указать гит и один из контактов!"
-        }
     }
 
    private fun hasGit() : Boolean {
@@ -44,7 +35,7 @@ class Student(
     constructor(
         params: Map<String, Any?>
     ) : this(
-        params.getOrDefault("id", null) as? UInt,
+        params["id"].toString().toUInt(),
         params["surname"] as String,
         params["name"] as String,
         params["lastname"] as String,
@@ -65,29 +56,11 @@ class Student(
     )
 
     override fun toString(): String {
-        return listOf(id, surname, name, lastname, phone, tg, email, git)
-            .joinToString(",") {
-                it?.toString() ?: ""
-            }
-    }
-
-    override fun getId(): UInt? {
-        return id
-    }
-
-    override fun setId(newId: UInt?) {
-        id = newId
+        return "$id,$surname,$name,$lastname,${phone ?: ""},${tg ?: ""},${email ?: ""},${git ?: ""}"
     }
 
     override fun getSurnameAndInitials() : String {
         return "$surname ${name.uppercase().first()}.${surname.uppercase().first()}."
-    }
-
-    override fun getGitInfo() : String {
-        if (git != null) {
-            return "git: $git"
-        }
-        return ""
     }
 
     override fun getContactsInfo() : String {
