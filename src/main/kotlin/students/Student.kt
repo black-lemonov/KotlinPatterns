@@ -24,14 +24,6 @@ class Student(
         checkGit(git)
     }
 
-   private fun hasGit() : Boolean {
-        return git != null
-   }
-
-    private fun hasContact() : Boolean {
-        return listOf(phone, tg, email).any {it != null}
-    }
-
     constructor(
         params: Map<String, Any?>
     ) : this(

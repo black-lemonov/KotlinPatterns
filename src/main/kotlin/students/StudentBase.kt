@@ -5,7 +5,7 @@ abstract class StudentBase {
     abstract val git: String?
 
     fun getInfo() : String {
-        return "$id;${getSurnameAndInitials()};${git ?: ""};${getContactsInfo()}"
+        return "${getSurnameAndInitials()};${git ?: ""};${getContactsInfo()}"
     }
 
     abstract fun getSurnameAndInitials() : String

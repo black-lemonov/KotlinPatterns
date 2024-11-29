@@ -12,13 +12,9 @@ class StudentShort : StudentBase {
     ) {
         this.id = id
         val fields = fetchInfo(info)
-        surnameAndInitials = fields[0] as String
+        this.surnameAndInitials = fields[0] as String
         this.git = fields[1]
-        contacts = fields[2]
-    }
-
-    private fun fetchInfo(info: String) : List<String?> {
-        return info.split(';').map { it.ifBlank {null} }
+        this.contacts = fields[2]
     }
 
     constructor(
@@ -27,6 +23,10 @@ class StudentShort : StudentBase {
         student.id,
         student.getInfo()
     )
+
+    private fun fetchInfo(info: String) : List<String?> {
+        return info.split(';').map { it.ifBlank {null} }
+    }
 
     override fun getSurnameAndInitials(): String {
         return surnameAndInitials
