@@ -8,7 +8,7 @@ import strategy.writers.StudentTxtWriter
 import strategy.writers.StudentYamlWriter
 import strategy.StudentList
 
-class StudentTestListTest {
+class StudentListTest {
     private val baseDir = "/home/egorp/MyProgs/uni/KotlinPatterns/src/test/resources"
     private val sl = StudentList()
 

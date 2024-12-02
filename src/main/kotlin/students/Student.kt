@@ -69,21 +69,21 @@ class Student(
     }
 
     fun setContacts(
-        phone_: String? = null,
-        tg_: String? = null,
-        email_: String? = null
+        phone: String? = null,
+        tg: String? = null,
+        email: String? = null
     ) {
-        if (phone_ != null) {
-            checkPhone(phone_)
-            phone = phone_
+        if (phone != null) {
+            checkPhone(phone)
+            this.phone = phone
         }
-        if (tg_ != null) {
-            checkTg(tg_)
-            tg = tg_
+        if (tg != null) {
+            checkTg(tg)
+            this.tg = tg
         }
-        if (email_ != null) {
-            checkEmail(email_)
-            email = email_
+        if (email != null) {
+            checkEmail(email)
+            this.email = email
         }
     }
 

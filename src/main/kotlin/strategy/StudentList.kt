@@ -3,10 +3,7 @@ package strategy
 import strategy.readers.StudentFileReader
 import strategy.writers.StudentFileWriter
 import students.Student
-import students.StudentShort
-import template.DataList
-import template.DataListStudentShort
-import kotlin.math.max
+
 
 open class StudentList() {
     private var data : MutableList<Student> = mutableListOf(

@@ -77,13 +77,13 @@ class StudentTest {
             1u, "Абрамов", "Иван", "Адольфович",
             "+71233212233"
         )
-        student.setContacts(email_ = "darkvan2006@mail.ru")
+        student.setContacts(email = "darkvan2006@mail.ru")
         assertEquals("darkvan2006@mail.ru", student.email)
 
-        student.setContacts(phone_ = "+71231231231")
+        student.setContacts(phone = "+71231231231")
         assertEquals(student.phone, "+71231231231")
 
-        student.setContacts(tg_ = "https://t.me/vano2006")
+        student.setContacts(tg = "https://t.me/vano2006")
         assertEquals(student.tg, "https://t.me/vano2006")
     }
 }
