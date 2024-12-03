@@ -254,3 +254,36 @@ erDiagram
         text git
     }
 ```
+#### Паттерн Синглтон
+```mermaid
+classDiagram
+StudentListDB --> DBContext
+class DBContext {
+    -Connection? con$
+
+    +connect(String dbURL)$
+    +disconnect()$
+    +checkConnection()$
+    +select(String columns, String from, String where)$ ResultSet?
+    +select(String columns, String from, Int limit, Int offset)$ ResultSet?
+    +insert(String into, String columns, String values)$
+    +update(String table, String set, String where)$
+    +delete(String from, String where)$
+    +selectCountAll(String from)$ Int?
+}
+class StudentListDB {
+    -DBContext context
+
+    +get(Int id) Student?
+
+    +getByPage(Int page, Int number) DataList<StudentShort>
+
+    +add(Student student)
+
+    +replaceById(Student student, Int id)
+
+    +removeById(Int id)
+
+    +countAll() Int?
+}
+```
