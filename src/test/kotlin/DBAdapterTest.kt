@@ -22,15 +22,15 @@ class DBAdapterTest {
     @Test
     fun testAdd() {
         db.add(
-            Student(0, "Карелин", "Вячеслав", "Семенович")
+            Student(0, "Учиха", "Мадара", "Таджима")
         )
     }
 
     @Test
     fun testReplace() {
         db.replaceById(
-            Student(0, "Учиха", "Саске", "Фугаки"),
-            8
+            Student(0, "Учиха", "Итачи", "Фугаки"),
+            10
         )
     }
 

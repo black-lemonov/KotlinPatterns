@@ -41,16 +41,20 @@ object DBContext {
         return result
     }
 
-    fun insert(into: String, columns: String, values: String) {
+    fun insert(into: String, columns: String, values: List<Any?>) {
         checkConnection()
         val stmt = con?.createStatement()
-        stmt?.executeUpdate("INSERT INTO $into ( $columns ) VALUES ( $values )")
+        stmt?.executeUpdate("INSERT INTO $into ( $columns ) VALUES ( ${values.map { if (it == null) null else "\"$it\"" }.joinToString(",") } )")
     }
 
-    fun update(table: String, set: String, where: String) {
+    fun update(table: String, setColumns: List<String>, setValues: List<Any?>, where: String) {
         checkConnection()
         val stmt = con?.createStatement()
-        stmt?.executeUpdate("UPDATE $table SET $set WHERE $where")
+        val setStmt = setColumns.zip(setValues) {
+            a, b -> "\"$a\"=${if (b == null) "NULL" else "\"$b\""}"
+        }.joinToString(",")
+
+        stmt?.executeUpdate("UPDATE $table SET $setStmt WHERE $where")
     }
 
     fun delete(from: String, where: String) {

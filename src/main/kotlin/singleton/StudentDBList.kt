@@ -37,14 +37,15 @@ class StudentDBList {
         context.insert(
             "student",
             "\"surname\", \"name\", \"lastname\", \"phone\", \"tg\", \"email\", \"git\"",
-            "\"${student.surname}\", \"${student.name}\", \"${student.lastname}\", \"${student.phone}\", \"${student.tg}\", \"${student.email}\", \"${student.git}\""
+            listOf<Any?>(student.surname, student.name, student.lastname, student.phone, student.tg, student.email, student.git)
         )
     }
 
     fun replaceById(student: Student, id: Int) {
         context.update(
             "student",
-            "\"surname\" = \"${student.surname}\", \"name\" = \"${student.name}\", \"lastname\" = \"${student.lastname}\", \"phone\" = \"${student.phone}\", \"tg\" = \"${student.phone}\", \"email\" = \"${student.email}\", \"git\" = \"${student.git}\"",
+            listOf("surname", "name", "lastname", "phone", "tg", "email", "git"),
+            listOf(student.surname, student.name, student.lastname, student.phone, student.tg, student.email, student.git),
             "id = $id"
         )
     }
