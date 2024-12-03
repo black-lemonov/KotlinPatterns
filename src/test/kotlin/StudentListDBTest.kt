@@ -1,6 +1,6 @@
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
-import strategy.StudentListDB
+import singleton.StudentListDB
 import students.Student
 import template.DataListStudentShort
 

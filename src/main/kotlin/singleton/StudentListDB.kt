@@ -1,35 +1,40 @@
-package strategy
+package singleton
 
 import students.Student
 import students.StudentShort
 import template.DataList
 import template.DataListStudentShort
-import java.sql.DriverManager
 
 
 class StudentListDB {
-    private val con = DBConnection("jdbc:sqlite:./src/main/resources/patterns.db")
-//    private val con = DriverManager.getConnection("jdbc:sqlite:./src/main/resources/patterns.db")
+    private val context = DBContext
 
-    fun get(id: Int) : Student {
-        val res = con.select("*", "student", "id = $id")
-        return Student(res)
+    init {
+        context.connect("jdbc:sqlite:./src/main/resources/patterns.db")
+    }
+
+    fun get(id: Int) : Student? {
+        val res = context.select("*", "student", "id = $id")
+        return if (res != null) Student(res) else null
     }
 
     fun getByPage(
         page : Int, number : Int
     ) : DataList<StudentShort> {
         require(page > 0) { "page must be > 0" }
-        val result = con.select("*",  "student", number, number * (page-1))
-        return  DataListStudentShort(
-            generateSequence {
-                if (result.next()) StudentShort(result) else null
-            }.toMutableList()
-        )
+        val result = context.select("*",  "student", number, number * (page-1))
+        if (result != null) {
+            return DataListStudentShort(
+                generateSequence {
+                    if (result.next()) StudentShort(result) else null
+                }.toMutableList()
+            )
+        }
+        return DataListStudentShort(mutableListOf())
     }
 
     fun add(student: Student) {
-        con.insert(
+        context.insert(
             "student",
             "\"surname\", \"name\", \"lastname\", \"phone\", \"tg\", \"email\", \"git\"",
             "\"${student.surname}\", \"${student.name}\", \"${student.lastname}\", \"${student.phone}\", \"${student.tg}\", \"${student.email}\", \"${student.git}\""
@@ -37,7 +42,7 @@ class StudentListDB {
     }
 
     fun replaceById(student: Student, id: Int) {
-        con.update(
+        context.update(
             "student",
             "\"surname\" = \"${student.surname}\", \"name\" = \"${student.name}\", \"lastname\" = \"${student.lastname}\", \"phone\" = \"${student.phone}\", \"tg\" = \"${student.phone}\", \"email\" = \"${student.email}\", \"git\" = \"${student.git}\"",
             "id = $id"
@@ -45,14 +50,15 @@ class StudentListDB {
     }
 
     fun removeById(id: Int) {
-        con.delete(
+        context.delete(
             "student",
             "\"id\" = $id"
         )
     }
 
-    fun countAll() : Int {
-        return con.selectCountAll("student")
+    fun countAll() : Int? {
+        val res = context.selectCountAll("student")
+        return res
     }
 }
 
