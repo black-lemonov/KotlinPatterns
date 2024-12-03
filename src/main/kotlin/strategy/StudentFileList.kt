@@ -1,5 +1,6 @@
 package strategy
 
+import adapter.StudentList
 import strategy.readers.StudentFileReader
 import strategy.writers.StudentFileWriter
 import students.Student
@@ -8,7 +9,8 @@ import template.DataList
 import template.DataListStudentShort
 import kotlin.math.max
 
-open class StudentList() {
+
+open class StudentFileList : StudentList {
     private var data : MutableList<Student> = mutableListOf(
         Student(1, "Курсед", "Тамара", "Львовна","+79118323322"),
         Student(2, "Акума", "Сергей", "Петрович"),
@@ -23,11 +25,11 @@ open class StudentList() {
         fileWriter.writeToFile(filepath, data)
     }
 
-    fun get(id: Int) : Student {
+    override fun get(id: Int) : Student {
         return data.first {it.id == id}
     }
 
-    fun getByPage(
+    override fun getByPage(
         page : Int, number : Int
     ) : DataList<StudentShort> {
         val prevPage = max(page - 1, 0)
@@ -48,21 +50,21 @@ open class StudentList() {
         data.sort()
     }
 
-    fun add(student: Student) {
+    override fun add(student: Student) {
         val nextId = (data.maxByOrNull { it.id }?.id ?: 0) + 1
         student.id = nextId
 
         data.addLast(student)
     }
 
-    fun replaceById(student: Student, id: Int) {
+    override fun replaceById(student: Student, id: Int) {
         student.id = id
         data.replaceAll { if (it.id == id) student else it }
     }
 
-    fun removeById(id: Int) {
+    override fun removeById(id: Int) {
         data.removeIf { it.id == id }
     }
 
-    fun countAll(): Int = data.count()
+    override fun countAll(): Int = data.count()
 }

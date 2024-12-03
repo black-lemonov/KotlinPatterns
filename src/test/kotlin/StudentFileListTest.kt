@@ -7,11 +7,11 @@ import strategy.readers.StudentYamlReader
 import strategy.writers.StudentJsonWriter
 import strategy.writers.StudentTxtWriter
 import strategy.writers.StudentYamlWriter
-import strategy.StudentList
+import strategy.StudentFileList
 import students.Student
 
 class StudentListTest {
-    private val sl = StudentList()
+    private val sl = StudentFileList()
 
     @Test fun testTxt() {
         sl.readFile("./src/test/resources/in.txt", StudentTxtReader())
