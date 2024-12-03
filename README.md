@@ -239,3 +239,18 @@ class StudentYamlReader {
 }
 }
 ```
+### Лаб. 4
+#### ER-диаграмма таблица student
+```mermaid
+erDiagram
+    PERSON {
+        integer id PK "NOT NULL"
+        text surname "NOT NULL"
+        text name "NOT NULL"
+        text lastname "NOT NULL"
+        text phone
+        text tg
+        text email
+        text git
+    }
+```
