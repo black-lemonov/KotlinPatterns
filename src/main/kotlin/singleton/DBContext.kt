@@ -1,8 +1,6 @@
 package singleton
 
-import java.sql.Connection
-import java.sql.DriverManager
-import java.sql.ResultSet
+import java.sql.*
 
 object DBContext {
     private var con: Connection? = null
@@ -29,18 +27,18 @@ object DBContext {
         }
     }
 
-    fun select(columns: String, from: String, where: String) : ResultSet? {
+    fun select(columns: String, from: String, where: String) : ResultSet {
         checkConnection()
         val stmt = con?.createStatement()
         val result = stmt?.executeQuery("select $columns from $from where $where")
-        return result
+        return result ?: throw SQLException()
     }
 
-    fun select(columns: String, from: String, limit: Int, offset: Int): ResultSet? {
+    fun select(columns: String, from: String, limit: Int, offset: Int): ResultSet {
         checkConnection()
         val stmt = con?.createStatement()
         val result = stmt?.executeQuery("select $columns from $from limit $limit offset $offset")
-        return result
+        return result ?: throw SQLException()
     }
 
     fun insert(into: String, columns: String, values: String) {
@@ -62,11 +60,11 @@ object DBContext {
     }
 
 
-    fun selectCountAll(from: String) : Int? {
+    fun selectCountAll(from: String) : Int {
         checkConnection()
         val stmt = con?.createStatement()
         val resultSet = stmt?.executeQuery("SELECT count(*) FROM $from")
         resultSet?.next()
-        return resultSet?.getInt(1)
+        return resultSet?.getInt(1) ?: throw SQLException()
     }
 }
