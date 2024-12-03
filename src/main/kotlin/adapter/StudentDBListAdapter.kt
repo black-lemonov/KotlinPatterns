@@ -1,61 +1,36 @@
 package adapter
 
-import singleton.DBContext
+import singleton.StudentDBList
 import students.Student
 import students.StudentShort
 import template.DataList
-import template.DataListStudentShort
+import java.sql.SQLException
 
 
 class StudentDBListAdapter : StudentList {
-    private val context = DBContext
-
-    init {
-        context.connect("jdbc:sqlite:./src/main/resources/patterns.db")
-    }
+    private val adaptee = StudentDBList()
 
     override fun get(id: Int) : Student {
-        val res = context.select("*", "student", "id = $id")
-        return Student(res)
+        return adaptee.get(id) ?: throw SQLException("No student found with id $id")
     }
 
-    override fun getByPage(
-        page : Int, number : Int
-    ) : DataList<StudentShort> {
-        require(page > 0) { "page must be > 0" }
-        val result = context.select("*",  "student", number, number * (page-1))
-        return DataListStudentShort(
-            generateSequence {
-                if (result.next()) StudentShort(result) else null
-            }.toMutableList()
-        )
+    override fun getByPage(page : Int, number : Int) : DataList<StudentShort> {
+        return adaptee.getByPage(page, number)
     }
 
     override fun add(student: Student) {
-        context.insert(
-            "student",
-            "\"surname\", \"name\", \"lastname\", \"phone\", \"tg\", \"email\", \"git\"",
-            "\"${student.surname}\", \"${student.name}\", \"${student.lastname}\", \"${student.phone}\", \"${student.tg}\", \"${student.email}\", \"${student.git}\""
-        )
+        adaptee.add(student)
     }
 
     override fun replaceById(student: Student, id: Int) {
-        context.update(
-            "student",
-            "\"surname\" = \"${student.surname}\", \"name\" = \"${student.name}\", \"lastname\" = \"${student.lastname}\", \"phone\" = \"${student.phone}\", \"tg\" = \"${student.phone}\", \"email\" = \"${student.email}\", \"git\" = \"${student.git}\"",
-            "id = $id"
-        )
+        adaptee.replaceById(student, id)
     }
 
     override fun removeById(id: Int) {
-        context.delete(
-            "student",
-            "\"id\" = $id"
-        )
+        adaptee.removeById(id)
     }
 
     override fun countAll() : Int {
-        val res = context.selectCountAll("student")
-        return res
+        return adaptee.countAll() ?: 0
     }
 }

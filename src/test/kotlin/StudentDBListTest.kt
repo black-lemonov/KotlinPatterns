@@ -1,11 +1,11 @@
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
-import singleton.StudentListDB
+import singleton.StudentDBList
 import students.Student
 import template.DataListStudentShort
 
-class StudentListDBTest {
-    private val db = StudentListDB()
+class StudentDBListTest {
+    private val db = StudentDBList()
 
     @Test
     fun testGet() {

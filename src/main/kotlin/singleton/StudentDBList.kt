@@ -6,7 +6,7 @@ import template.DataList
 import template.DataListStudentShort
 
 
-class StudentListDB {
+class StudentDBList {
     private val context = DBContext
 
     init {

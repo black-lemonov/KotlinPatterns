@@ -1,11 +1,11 @@
-import adapter.StudentListDBAdapter
+import adapter.StudentDBListAdapter
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import students.Student
 import template.DataListStudentShort
 
 class DBAdapterTest {
-    private val db = StudentListDBAdapter()
+    private val db = StudentDBListAdapter()
 
     @Test
     fun testGet() {
