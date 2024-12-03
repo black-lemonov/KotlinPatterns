@@ -7,7 +7,7 @@ import template.DataList
 import template.DataListStudentShort
 
 
-class StudentListDBAdapter : StudentList {
+class StudentDBListAdapter : StudentList {
     private val context = DBContext
 
     init {

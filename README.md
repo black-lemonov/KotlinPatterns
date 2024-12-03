@@ -273,17 +273,49 @@ class DBContext {
 }
 class StudentListDB {
     -DBContext context
-
     +get(Int id) Student?
-
-    +getByPage(Int page, Int number) DataList<StudentShort>
-
+    +getByPage(Int page, Int number) DataList~StudentShort~
     +add(Student student)
-
     +replaceById(Student student, Int id)
-
     +removeById(Int id)
-
     +countAll() Int?
 }
+```
+### Лаб. 5
+#### Паттерн Адаптер
+```mermaid
+classDiagram
+StudentFileList --|> StudentList
+StudentDBListAdapter --|> StudentList
+class StudentList {
+    <<<Interface>>>
+    +get(Int id) Student
+    +getByPage(Int page, Int number) DataList~StudentShort~ 
+    +add(Student student)
+    +replaceById(Student student, Int id)
+    +removeById(Int id)
+    +countAll() Int 
+}
+class StudentDBListAdapter {
+    -DBContext context
+    +get(Int id) Student
+    +getByPage(Int page, Int number) DataList~StudentShort~ 
+    +add(Student student)
+    +replaceById(Student student, Int id)
+    +removeById(Int id)
+    +countAll() Int 
+}
+class StudentFileList {
+    -MutableList~Student~ data
+    +readFile(String filepath, StudentFileReader fileReader)
+    +writeToFile(String filepath, StudentFileWriter fileWriter)
+    +get(Int id) Student
+    +getByPage(Int page, Int number) DataList~StudentShort~ 
+    +orderBySurnameAndInitials()
+    +add(Student student)
+    +replaceById(Student student, Int id)
+    +removeById(Int id)
+    +countAll() Int 
+}
+
 ```
