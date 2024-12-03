@@ -10,8 +10,6 @@ interface StudentList {
 
     fun getByPage(page : Int, number : Int) : DataList<StudentShort>
 
-    fun orderBySurnameAndInitials()
-
     fun add(student: Student)
 
     fun replaceById(student: Student, id: Int)
