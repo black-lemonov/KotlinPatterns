@@ -8,20 +8,19 @@ import java.sql.DriverManager
 
 
 class StudentListDB {
-    private val con = DriverManager.getConnection("jdbc:sqlite:./src/main/resources/patterns.db")
+    private val con = DBConnection("jdbc:sqlite:./src/main/resources/patterns.db")
+//    private val con = DriverManager.getConnection("jdbc:sqlite:./src/main/resources/patterns.db")
 
-    fun get(id: Int) : Student? {
-        val stmt = con.createStatement()
-        val result = stmt.executeQuery("select * from student where id = $id")
-        return if (result.next()) Student(result) else null
+    fun get(id: Int) : Student {
+        val res = con.select("*", "student", "id = $id")
+        return Student(res)
     }
 
     fun getByPage(
         page : Int, number : Int
     ) : DataList<StudentShort> {
         require(page > 0) { "page must be > 0" }
-        val stmt = con.createStatement()
-        val result = stmt.executeQuery("select * from student limit $number offset ${number * (page-1)}")
+        val result = con.select("*",  "student", number, number * (page-1))
         return  DataListStudentShort(
             generateSequence {
                 if (result.next()) StudentShort(result) else null
@@ -30,63 +29,30 @@ class StudentListDB {
     }
 
     fun add(student: Student) {
-        try {
-            val sql = "INSERT INTO student" +
-                    "(\"surname\", \"name\", \"lastname\", \"phone\", \"tg\", \"email\", \"git\")" +
-                    "VALUES (?, ?, ?, ?, ?, ?, ?)"
-            val preparedStatement = con.prepareStatement(sql)
-            preparedStatement.setString(1, student.surname)
-            preparedStatement.setString(2, student.name)
-            preparedStatement.setString(3, student.lastname)
-            preparedStatement.setString(4, student.phone)
-            preparedStatement.setString(5, student.tg)
-            preparedStatement.setString(6, student.email)
-            preparedStatement.setString(7, student.git)
-            preparedStatement.executeUpdate()
-        } catch (e: Exception) {
-            con.rollback()
-            throw e
-        }
+        con.insert(
+            "student",
+            "\"surname\", \"name\", \"lastname\", \"phone\", \"tg\", \"email\", \"git\"",
+            "\"${student.surname}\", \"${student.name}\", \"${student.lastname}\", \"${student.phone}\", \"${student.tg}\", \"${student.email}\", \"${student.git}\""
+        )
     }
 
     fun replaceById(student: Student, id: Int) {
-        try {
-            val sql = "UPDATE student SET \"surname\" = ?, \"name\" = ?, \"lastname\" = ?," +
-                    "\"phone\" = ?, \"tg\" = ?, \"email\" = ?, \"git\" = ?" +
-                    "WHERE id = ?"
-            val preparedStatement = con.prepareStatement(sql)
-            preparedStatement.setString(1, student.surname)
-            preparedStatement.setString(2, student.name)
-            preparedStatement.setString(3, student.lastname)
-            preparedStatement.setString(4, student.phone)
-            preparedStatement.setString(5, student.tg)
-            preparedStatement.setString(6, student.email)
-            preparedStatement.setString(7, student.git)
-            preparedStatement.setInt(8, id)
-            preparedStatement.executeUpdate()
-        } catch (e: Exception) {
-            con.rollback()
-            throw e
-        }
+        con.update(
+            "student",
+            "\"surname\" = \"${student.surname}\", \"name\" = \"${student.name}\", \"lastname\" = \"${student.lastname}\", \"phone\" = \"${student.phone}\", \"tg\" = \"${student.phone}\", \"email\" = \"${student.email}\", \"git\" = \"${student.git}\"",
+            "id = $id"
+        )
     }
 
-    fun remove(id: Int) {
-        try {
-            val sql = "DELETE FROM student WHERE \"id\" = ?"
-            val preparedStatement = con.prepareStatement(sql)
-            preparedStatement.setInt(1, id)
-            preparedStatement.executeUpdate()
-        } catch (e: Exception) {
-            con.rollback()
-            throw e
-        }
+    fun removeById(id: Int) {
+        con.delete(
+            "student",
+            "\"id\" = $id"
+        )
     }
 
     fun countAll() : Int {
-        val stmt = con.createStatement()
-        val resultSet = stmt.executeQuery("SELECT count(*) FROM student")
-        resultSet.next()
-        return resultSet.getInt(1)
+        return con.selectCountAll("student")
     }
 }
 

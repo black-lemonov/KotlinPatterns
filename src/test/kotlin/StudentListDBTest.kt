@@ -10,7 +10,7 @@ class StudentListDBTest {
     @Test
     fun testGet() {
         val s = db.get(1)
-        assertTrue(s is Student?)
+        assertTrue(s is Student)
         println(s)
     }
 
@@ -30,14 +30,14 @@ class StudentListDBTest {
     @Test
     fun testReplace() {
         db.replaceById(
-            Student(0, "Учиха", "Мадара", "Таджима"),
-            7
+            Student(0, "Учиха", "Саске", "Фугаки"),
+            8
         )
     }
 
     @Test
     fun testRemove() {
-        db.remove(7)
+        db.removeById(9)
     }
 
     @Test
