@@ -243,7 +243,7 @@ class StudentYamlReader {
 #### ER-диаграмма таблица student
 ```mermaid
 erDiagram
-    PERSON {
+    student {
         integer id PK "NOT NULL"
         text surname "NOT NULL"
         text name "NOT NULL"
