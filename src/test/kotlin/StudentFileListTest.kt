@@ -10,7 +10,7 @@ import strategy.writers.StudentYamlWriter
 import strategy.StudentFileList
 import students.Student
 
-class StudentListTest {
+class StudentFileListTest {
     private val sl = StudentFileList()
 
     @Test fun testTxt() {
