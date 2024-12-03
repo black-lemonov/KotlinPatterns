@@ -288,7 +288,7 @@ classDiagram
 StudentFileList --|> StudentList
 StudentDBListAdapter --|> StudentList
 class StudentList {
-    <<<Interface>>>
+    <<Interface>>
     +get(Int id) Student
     +getByPage(Int page, Int number) DataList~StudentShort~ 
     +add(Student student)
