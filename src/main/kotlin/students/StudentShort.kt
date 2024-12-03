@@ -1,5 +1,7 @@
 package students
 
+import java.sql.ResultSet
+
 class StudentShort : StudentBase {
     override var id : Int
     private val surnameAndInitials : String
@@ -22,6 +24,12 @@ class StudentShort : StudentBase {
     ) : this(
         student.id,
         student.getInfo()
+    )
+
+    constructor(
+        rs: ResultSet
+    ) : this(
+        Student(rs)
     )
 
     private fun fetchInfo(info: String) : List<String?> {
