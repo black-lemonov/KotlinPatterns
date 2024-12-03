@@ -1,6 +1,8 @@
 package students
 
 import kotlinx.serialization.Serializable
+import java.sql.ResultSet
+
 
 @Serializable
 class Student(
@@ -45,6 +47,19 @@ class Student(
                 params.split(',').map {it.ifEmpty {null} }
             )
             .toMap()
+    )
+
+    constructor(
+        rs: ResultSet
+    ) : this(
+        id = rs.getInt("id"),
+        surname = rs.getString("surname"),
+        name = rs.getString("name"),
+        lastname = rs.getString("lastname"),
+        phone = rs.getString("phone"),
+        tg = rs.getString("tg"),
+        email = rs.getString("email"),
+        git = rs.getString("git")
     )
 
     override fun toString(): String {

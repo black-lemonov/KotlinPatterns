@@ -2,6 +2,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
 
 import students.Student
+import java.sql.DriverManager
 
 
 class StudentTest {
@@ -33,6 +34,14 @@ class StudentTest {
         Student(
             "1,Абрамов,Иван,Адольфович,+71233212233,,,"
         )
+    }
+
+    @Test
+    fun testResultSetConstructor() {
+        val con = DriverManager.getConnection("jdbc:sqlite:./src/main/resources/patterns.db")
+        val stmt = con.createStatement()
+        val result = stmt.executeQuery("select * from student")
+        Student(result)
     }
 
     @Test
