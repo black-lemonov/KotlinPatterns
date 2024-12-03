@@ -18,7 +18,7 @@ abstract class DataList<T> {
         return _selected.toList()
     }
 
-    fun get_data() : DataTable {
+    fun getData() : DataTable {
         return DataTable(
             List(_data.size) {
                 index -> listOf(index+1) + getEntityFields(index)
