@@ -1,15 +1,10 @@
 package strategy
 
-import students.Student
-import students.StudentShort
-import template.DataList
-import template.DataListStudentShort
 import java.sql.Connection
 import java.sql.DriverManager
-import java.sql.PreparedStatement
 import java.sql.ResultSet
 
-class DBConnection(dbURL: String) {
+class DBContext {
     private var con: Connection = DriverManager.getConnection(dbURL)
 
     fun select(columns: String, from: String, where: String) : ResultSet {
