@@ -1,13 +1,13 @@
 package students
 
 class StudentShort : StudentBase {
-    override var id : UInt
+    override var id : Int
     private val surnameAndInitials : String
     override val git : String?
     private val contacts : String?
 
     constructor(
-        id : UInt,
+        id : Int,
         info: String
     ) {
         this.id = id

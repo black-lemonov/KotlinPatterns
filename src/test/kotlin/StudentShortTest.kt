@@ -8,7 +8,7 @@ class StudentShortTest {
     @Test
     fun testIdInfoConstructor() {
         StudentShort(
-            1u,
+            1,
             "Абрамов И.А.;;тел: +70000000000"
         )
     }
@@ -17,7 +17,7 @@ class StudentShortTest {
     fun testFromStudentConstructor() {
         StudentShort(
             Student(
-                1u,
+                1,
                 "Абрамов",
                 "Иван",
                 "Адольфович",
@@ -29,7 +29,7 @@ class StudentShortTest {
     @Test
     fun testGetInfo() {
         val ss = StudentShort(
-            1u,
+            1,
             "Абрамов И.А.;;тел: +70000000000"
         )
         assertEquals(
@@ -41,7 +41,7 @@ class StudentShortTest {
     @Test
     fun testGetContactsInfo() {
         val ss = StudentShort(
-            1u,
+            1,
             "Абрамов И.А.;;тел: +70000000000"
         )
         assertEquals(
@@ -53,7 +53,7 @@ class StudentShortTest {
     @Test
     fun testGetSurnameAndInitials() {
         val ss = StudentShort(
-            1u,
+            1,
             "Абрамов И.А.;;тел: +70000000000"
         )
         assertEquals(

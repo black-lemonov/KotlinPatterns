@@ -8,7 +8,7 @@ class StudentTest {
     @Test
     fun testPrimaryConstructor() {
         Student(
-            1u, "Абрамов",
+            1, "Абрамов",
             "Иван",
             "Адольфович",
             "+71233212233"
@@ -38,7 +38,7 @@ class StudentTest {
     @Test
     fun testGetInfo() {
         val student = Student(
-            1u, "Абрамов", "Иван", "Адольфович",
+            1, "Абрамов", "Иван", "Адольфович",
             "+71233212233"
         )
         assertEquals(
@@ -50,7 +50,7 @@ class StudentTest {
     @Test
     fun testGetSurnameAndInitials() {
         val student = Student(
-            1u, "Абрамов", "Иван", "Адольфович",
+            1, "Абрамов", "Иван", "Адольфович",
             "+71233212233"
         )
         assertEquals(
@@ -62,7 +62,7 @@ class StudentTest {
     @Test
     fun testGetContactsInfo() {
         val student = Student(
-            1u, "Абрамов", "Иван", "Адольфович",
+            1, "Абрамов", "Иван", "Адольфович",
             "+71233212233"
         )
         assertEquals(
@@ -74,7 +74,7 @@ class StudentTest {
     @Test
     fun testSetContacts() {
         val student = Student(
-            1u, "Абрамов", "Иван", "Адольфович",
+            1, "Абрамов", "Иван", "Адольфович",
             "+71233212233"
         )
         student.setContacts(email = "darkvan2006@mail.ru")

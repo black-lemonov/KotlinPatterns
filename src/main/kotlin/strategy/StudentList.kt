@@ -7,9 +7,9 @@ import students.Student
 
 open class StudentList() {
     private var data : MutableList<Student> = mutableListOf(
-        Student(1u, "Курсед", "Тамара", "Львовна","+79118323322"),
-        Student(2u, "Акума", "Сергей", "Петрович"),
-        Student(3u, "Степанова", "Вероника", "Петровна","+79829371233")
+        Student(1, "Курсед", "Тамара", "Львовна","+79118323322"),
+        Student(2, "Акума", "Сергей", "Петрович"),
+        Student(3, "Степанова", "Вероника", "Петровна","+79829371233")
     )
 
     fun readFile(filepath: String, fileReader: StudentFileReader) {
@@ -20,7 +20,7 @@ open class StudentList() {
         fileWriter.writeToFile(filepath, data)
     }
 
-    fun get(id: UInt) : Student {
+    fun get(id: Int) : Student {
         return data.first {it.id == id}
     }
 }

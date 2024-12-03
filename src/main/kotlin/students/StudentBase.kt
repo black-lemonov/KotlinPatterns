@@ -1,7 +1,7 @@
 package students
 
 abstract class StudentBase {
-    abstract val id: UInt
+    abstract val id: Int
     abstract val git: String?
 
     fun getInfo() : String {

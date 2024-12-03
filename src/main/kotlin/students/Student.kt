@@ -4,7 +4,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 class Student(
-    override var id: UInt,
+    override var id: Int,
     var surname: String,
     var name : String,
     var lastname : String,
@@ -27,7 +27,7 @@ class Student(
     constructor(
         params: Map<String, Any?>
     ) : this(
-        params["id"].toString().toUInt(),
+        params["id"].toString().toInt(),
         params["surname"] as String,
         params["name"] as String,
         params["lastname"] as String,
