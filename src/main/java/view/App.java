@@ -12,6 +12,13 @@ public class App {
             JFrame frame = new JFrame("Student Manager");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             frame.setSize(854, 480);
+
+            JTabbedPane tabbedPane = new JTabbedPane();
+            tabbedPane.add("Список студентов", new JLabel("Технические работы"));
+            tabbedPane.add("Вкладка 2", new JLabel("Технические работы"));
+            tabbedPane.add("Вкладка 3", new JLabel("Технические работы"));
+
+            frame.add(tabbedPane);
             frame.setVisible(true);
         });
     }
