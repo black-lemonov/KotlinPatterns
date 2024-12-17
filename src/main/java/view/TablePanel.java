@@ -1,21 +1,33 @@
 package view;
 
+import adapter.StudentDBListAdapter;
+import adapter.StudentList;
 import students.Student;
+import students.StudentShort;
+import template.DataTable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class TablePanel extends JPanel {
     private static JTable table;
     private static DefaultTableModel model;
+    private static final StudentDBListAdapter students = new StudentDBListAdapter();
+
     private static int currentPage = 1;
+    private static int pageSize = 10;
 
     TablePanel() {
         super(new BorderLayout());
         addFilters();
         addTable();
+        refreshModel();
         addButtons();
     }
 
@@ -69,6 +81,10 @@ public class TablePanel extends JPanel {
         };
         table = new JTable(model);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+        table.setRowSorter(sorter);
+
         this.add(new JScrollPane(table), BorderLayout.CENTER);
     }
 
@@ -93,25 +109,42 @@ public class TablePanel extends JPanel {
         refreshModel();
 
         addButton.addActionListener(e -> {
-//            TODO:
+            Student student = new Student(
+                    11,
+                    "Учиха", "Саске", "Фугаку",
+                    "+79298389922", "https://t.me/sasuke",
+                    "sasuke@hebi.com", "https://www.github.com/sasukeprog"
+            );
+            students.add(student);
+            refreshModel();
         });
 
         editButton.addActionListener(e -> {
-//            TODO:
+            int selectedRow = table.getSelectedRow();
+            int id = (int) table.getValueAt(selectedRow, 0);
+            Student student = students.get(id);
+            student.setName("Изменено");
+            refreshModel();
         });
 
         deleteButton.addActionListener(e -> {
-//            TODO:
+            int selectedRow = table.getSelectedRow();
+            int id = (int) table.getValueAt(selectedRow, 0);
+            students.removeById(id);
+            refreshModel();
         });
 
+        var pageLbl = new JLabel(Integer.toString(currentPage));
         nextPageButton.addActionListener(e -> {
             currentPage++;
+            pageLbl.setText(Integer.toString(currentPage));
             refreshModel();
         });
 
         prevPageButton.addActionListener(e -> {
             if (currentPage > 1) {
                 currentPage--;
+                pageLbl.setText(Integer.toString(currentPage));
                 refreshModel();
             }
         });
@@ -124,6 +157,7 @@ public class TablePanel extends JPanel {
         buttonPanel.add(editButton);
         buttonPanel.add(deleteButton);
         buttonPanel.add(prevPageButton);
+        buttonPanel.add(pageLbl);
         buttonPanel.add(nextPageButton);
         buttonPanel.add(refreshButton);
 
@@ -131,11 +165,20 @@ public class TablePanel extends JPanel {
     }
 
     private static void refreshModel() {
-//        TODO:
-    }
+        model.setRowCount(0);
 
-    private static void loadStudents() {
-//        TODO:
+        var studentsList = students.getListByPage(currentPage, pageSize);
+
+        for (Student student : studentsList) {
+            model.addRow(new Object[] {
+                    student.getId(),
+                    student.getSurnameAndInitials(),
+                    student.getPhone(),
+                    student.getTg(),
+                    student.getEmail(),
+                    student.getGit()
+            });
+        }
     }
 
     private static void setFilter(JComboBox<String> comboBox, JTextField textField) {
