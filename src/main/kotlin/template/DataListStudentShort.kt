@@ -10,9 +10,9 @@ class DataListStudentShort(
         val student = _data[index]
         return listOf(
             student.id,
+            student.getSurnameAndInitials(),
             student.git,
             student.getContactsInfo()
         )
     }
-
 }

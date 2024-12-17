@@ -4,6 +4,7 @@ import singleton.StudentDBList
 import students.Student
 import students.StudentShort
 import template.DataList
+import template.DataListStudentShort
 import java.sql.SQLException
 
 
@@ -16,6 +17,10 @@ class StudentDBListAdapter : StudentList {
 
     override fun getByPage(page : Int, number : Int) : DataList<StudentShort> {
         return adaptee.getByPage(page, number)
+    }
+
+    fun getListByPage(page : Int, number : Int) : List<Student> {
+        return adaptee.getListByPage(page, number)
     }
 
     override fun add(student: Student) {

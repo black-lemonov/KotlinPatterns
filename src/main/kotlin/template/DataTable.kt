@@ -19,5 +19,6 @@ class DataTable(
         get() = data.size
 
     val columns : Int
-        get() = data.first().size
+        get() = data.maxOf { it.size }
+
 }

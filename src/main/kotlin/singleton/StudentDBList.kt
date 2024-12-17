@@ -33,6 +33,19 @@ class StudentDBList {
         return DataListStudentShort(mutableListOf())
     }
 
+    fun getListByPage(
+        page : Int, number : Int
+    ) : List<Student> {
+        require(page > 0) { "page must be > 0" }
+        val result = context.select("*",  "student", number, number * (page-1))
+        if (result != null) {
+            return generateSequence {
+                if (result.next()) Student(result) else null
+            }.toMutableList()
+        }
+        return mutableListOf()
+    }
+
     fun add(student: Student) {
         context.insert(
             "student",

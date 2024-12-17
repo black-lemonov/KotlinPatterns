@@ -23,7 +23,7 @@ class Student(
         checkPhone(phone)
         checkTg(tg)
         checkEmail(email)
-        checkGit(git)
+//        checkGit(git)
     }
 
     constructor(
@@ -67,7 +67,7 @@ class Student(
     }
 
     override fun getSurnameAndInitials() : String {
-        return "$surname ${name.uppercase().first()}.${surname.uppercase().first()}."
+        return "$surname ${name.uppercase().first()}.${lastname.uppercase().first()}."
     }
 
     override fun getContactsInfo() : String {

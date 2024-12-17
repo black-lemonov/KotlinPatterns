@@ -1,8 +1,8 @@
 package template
 
 abstract class DataList<T> {
-    protected abstract val _data: MutableList<T>
-    protected val _selected: MutableList<Int> = mutableListOf()
+    abstract val _data: MutableList<T>
+    val _selected: MutableList<Int> = mutableListOf()
 
     fun select(index : Int) {
         require(index > 0 && index <= _data.size) {
