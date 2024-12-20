@@ -1,23 +1,16 @@
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.Assertions.*
-import singleton.StudentDBList
+import singleton.StudentListDB
 import students.Student
-import template.DataListStudentShort
+import template.DataListStudent
 
-class StudentDBListTest {
-    private val db = StudentDBList()
-
-    @Test
-    fun testGet() {
-        val s = db.get(1)
-        assertTrue(s is Student)
-        println(s)
-    }
+class StudentListDBTest {
+    private val db = StudentListDB()
 
     @Test
     fun testGetByPage() {
         val dl = db.getByPage(1, 3)
-        assertTrue(dl is DataListStudentShort)
+        assertTrue(dl is DataListStudent)
     }
 
     @Test

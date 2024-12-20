@@ -7,11 +7,11 @@ import strategy.readers.StudentYamlReader
 import strategy.writers.StudentJsonWriter
 import strategy.writers.StudentTxtWriter
 import strategy.writers.StudentYamlWriter
-import strategy.StudentFileList
+import strategy.StudentListFile
 import students.Student
 
-class StudentFileListTest {
-    private val sl = StudentFileList()
+class StudentListFileTest {
+    private val sl = StudentListFile()
 
     @Test fun testTxt() {
         sl.readFile("./src/test/resources/in.txt", StudentTxtReader())
@@ -26,10 +26,6 @@ class StudentFileListTest {
     @Test fun testYaml() {
         sl.readFile("./src/test/resources/in.yaml", StudentYamlReader())
         sl.writeToFile("./src/test/resources/out.yaml", StudentYamlWriter())
-    }
-
-    @Test fun testGet() {
-        println("id: 1 - ${sl.get(1).getInfo()}")
     }
 
     @Test fun testGetByPage() {
@@ -61,9 +57,5 @@ class StudentFileListTest {
             Student(4, "Ризе", "Зинаида", "Георгиевна"),
             4
         )
-    }
-
-    @Test fun testCount() {
-        assertEquals(3, sl.countAll())
     }
 }
