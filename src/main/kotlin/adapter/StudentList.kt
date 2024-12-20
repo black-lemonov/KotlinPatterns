@@ -1,14 +1,13 @@
 package adapter
 
 import students.Student
-import students.StudentShort
 import template.DataList
 
 
 interface StudentList {
-    fun get(id: Int) : Student
+    fun get(id: Int) : Student?
 
-    fun getByPage(page : Int, number : Int) : DataList<StudentShort>
+    fun getByPage(page : Int, number : Int) : DataList<Student>
 
     fun add(student: Student)
 

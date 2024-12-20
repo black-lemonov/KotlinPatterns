@@ -4,18 +4,13 @@ import adapter.StudentList
 import strategy.readers.StudentFileReader
 import strategy.writers.StudentFileWriter
 import students.Student
-import students.StudentShort
 import template.DataList
-import template.DataListStudentShort
+import template.DataListStudent
 import kotlin.math.max
 
 
-open class StudentFileList : StudentList {
-    private var data : MutableList<Student> = mutableListOf(
-        Student(1, "Курсед", "Тамара", "Львовна","+79118323322"),
-        Student(2, "Акума", "Сергей", "Петрович"),
-        Student(3, "Степанова", "Вероника", "Петровна","+79829371233")
-    )
+open class StudentListFile : StudentList {
+    private var data : MutableList<Student> = mutableListOf()
 
     fun readFile(filepath: String, fileReader: StudentFileReader) {
         data = fileReader.readFromFile(filepath) as MutableList<Student>
@@ -31,17 +26,17 @@ open class StudentFileList : StudentList {
 
     override fun getByPage(
         page : Int, number : Int
-    ) : DataList<StudentShort> {
+    ) : DataList<Student> {
         val prevPage = max(page - 1, 0)
-        require(prevPage * number <= data.size) {
-            "Нет страницы с номером $page"
+
+        if (prevPage * number <= data.size) {
+            return DataListStudent(mutableListOf())
         }
 
-        return DataListStudentShort(
+        return DataListStudent(
             data
                 .drop(prevPage * number)
                 .take(number)
-                .map { StudentShort(it) }
                 .toMutableList()
         )
     }

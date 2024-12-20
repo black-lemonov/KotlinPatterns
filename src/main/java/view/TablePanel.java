@@ -1,24 +1,19 @@
 package view;
 
-import adapter.StudentDBListAdapter;
-import adapter.StudentList;
+import adapter.StudentListDBAdapter;
 import students.Student;
-import students.StudentShort;
-import template.DataTable;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class TablePanel extends JPanel {
     private static JTable table;
     private static DefaultTableModel model;
-    private static final StudentDBListAdapter students = new StudentDBListAdapter();
+    private static final StudentListDBAdapter students = new StudentListDBAdapter();
 
     private static int currentPage = 1;
     private static int pageSize = 10;
@@ -80,7 +75,7 @@ public class TablePanel extends JPanel {
             }
         };
         table = new JTable(model);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
         table.setRowSorter(sorter);
@@ -167,17 +162,13 @@ public class TablePanel extends JPanel {
     private static void refreshModel() {
         model.setRowCount(0);
 
-        var studentsList = students.getListByPage(currentPage, pageSize);
-
-        for (Student student : studentsList) {
-            model.addRow(new Object[] {
-                    student.getId(),
-                    student.getSurnameAndInitials(),
-                    student.getPhone(),
-                    student.getTg(),
-                    student.getEmail(),
-                    student.getGit()
-            });
+        var tablePage = students.getByPage(currentPage, pageSize).getData();
+        for (int row = 1; row <= tablePage.getRows(); row++ ) {
+            var rowData = new Object[tablePage.getColumns()];
+            for (int col = 1; col <= tablePage.getColumns(); col++ ) {
+                rowData[col-1] = tablePage.get(row, col);
+            }
+            model.addRow(rowData);
         }
     }
 

@@ -12,13 +12,12 @@ class DataTable(
             "Таблица имеет меньший размер"
         }
 
-        return data[row][column]
+        return data[row-1][column-1]
     }
 
     val rows : Int
         get() = data.size
 
     val columns : Int
-        get() = data.maxOf { it.size }
-
+        get() = data.first().size
 }

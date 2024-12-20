@@ -1,52 +1,39 @@
 package singleton
 
+import adapter.StudentList
 import students.Student
-import students.StudentShort
 import template.DataList
-import template.DataListStudentShort
+import template.DataListStudent
 
 
-class StudentDBList {
+class StudentListDB : StudentList {
     private val context = DBContext
 
     init {
         context.connect("jdbc:sqlite:./src/main/resources/patterns.db")
     }
 
-    fun get(id: Int) : Student? {
+    override fun get(id: Int) : Student? {
         val res = context.select("*", "student", "id = $id")
         return if (res != null) Student(res) else null
     }
 
-    fun getByPage(
+    override fun getByPage(
         page : Int, number : Int
-    ) : DataList<StudentShort> {
+    ) : DataList<Student> {
         require(page > 0) { "page must be > 0" }
         val result = context.select("*",  "student", number, number * (page-1))
         if (result != null) {
-            return DataListStudentShort(
+            return DataListStudent(
                 generateSequence {
-                    if (result.next()) StudentShort(result) else null
+                    if (result.next()) Student(result) else null
                 }.toMutableList()
             )
         }
-        return DataListStudentShort(mutableListOf())
+        return DataListStudent(mutableListOf())
     }
 
-    fun getListByPage(
-        page : Int, number : Int
-    ) : List<Student> {
-        require(page > 0) { "page must be > 0" }
-        val result = context.select("*",  "student", number, number * (page-1))
-        if (result != null) {
-            return generateSequence {
-                if (result.next()) Student(result) else null
-            }.toMutableList()
-        }
-        return mutableListOf()
-    }
-
-    fun add(student: Student) {
+    override fun add(student: Student) {
         context.insert(
             "student",
             "\"surname\", \"name\", \"lastname\", \"phone\", \"tg\", \"email\", \"git\"",
@@ -54,7 +41,7 @@ class StudentDBList {
         )
     }
 
-    fun replaceById(student: Student, id: Int) {
+    override fun replaceById(student: Student, id: Int) {
         context.update(
             "student",
             listOf("surname", "name", "lastname", "phone", "tg", "email", "git"),
@@ -63,16 +50,16 @@ class StudentDBList {
         )
     }
 
-    fun removeById(id: Int) {
+    override fun removeById(id: Int) {
         context.delete(
             "student",
             "\"id\" = $id"
         )
     }
 
-    fun countAll() : Int? {
+    override fun countAll() : Int {
         val res = context.selectCountAll("student")
-        return res
+        return res ?: 0
     }
 }
 
