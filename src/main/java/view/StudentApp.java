@@ -12,6 +12,16 @@ import java.util.function.Consumer;
 
 
 public class StudentApp {
+    private static final JTextField nameField = new JTextField();
+    private static final JTextField phoneField = new JTextField();
+    private static final JComboBox<String> phoneComboBox = new JComboBox<>(new String[] {"Не важно", "Да", "Нет"});
+    private static final JTextField tgField = new JTextField();
+    private static final JComboBox<String> tgComboBox = new JComboBox<>(new String[] {"Не важно", "Да", "Нет"});
+    private static final JTextField emailField = new JTextField();
+    private static final JComboBox<String> emailComboBox = new JComboBox<>(new String[] {"Не важно", "Да", "Нет"});
+    private static final JTextField gitField = new JTextField();
+    private static final JComboBox<String> gitComboBox = new JComboBox<>(new String[] {"Не важно", "Да", "Нет"});
+
     private static JTable table;
     private static DefaultTableModel model;
     private static final StudentList studentList = new StudentListDB();
@@ -45,34 +55,25 @@ public class StudentApp {
         JPanel filterPanel = new JPanel(new GridLayout(5, 3));
         filterPanel.setBorder(BorderFactory.createTitledBorder("Фильтры"));
 
-        JTextField nameField = new JTextField();
-        JComboBox<String> gitComboBox = new JComboBox<>(new String[] {"Не важно", "Да", "Нет"});
         filterPanel.add(new JLabel("Фамилия И.О."));
         filterPanel.add(nameField);
         filterPanel.add(new JLabel());
 
-        JTextField phoneField = new JTextField();
-        JComboBox<String> phoneComboBox = new JComboBox<>(new String[] {"Не важно", "Да", "Нет"});
         filterPanel.add(new JLabel("телефон"));
         filterPanel.add(phoneComboBox);
         filterPanel.add(phoneField);
         setFilter(phoneComboBox, phoneField);
 
-        JTextField tgField = new JTextField();
-        JComboBox<String> tgComboBox = new JComboBox<>(new String[] {"Не важно", "Да", "Нет"});
         filterPanel.add(new JLabel("tg"));
         filterPanel.add(tgComboBox);
         filterPanel.add(tgField);
         setFilter(tgComboBox, tgField);
 
-        JTextField emailField = new JTextField();
-        JComboBox<String> emailComboBox = new JComboBox<>(new String[] {"Не важно", "Да", "Нет"});
         filterPanel.add(new JLabel("email"));
         filterPanel.add(emailComboBox);
         filterPanel.add(emailField);
         setFilter(emailComboBox, emailField);
 
-        JTextField gitField = new JTextField();
         filterPanel.add(new JLabel("git"));
         filterPanel.add(gitComboBox);
         filterPanel.add(gitField);
@@ -191,6 +192,13 @@ public class StudentApp {
         return tablePanel;
     }
 
+    private static void setFilter(JComboBox<String> comboBox, JTextField textField) {
+        textField.setEnabled(false);
+        comboBox.addActionListener(e -> {
+            textField.setEnabled(Objects.equals(comboBox.getSelectedItem(), "Да"));
+        });
+    }
+
     private static void refreshModel() {
         model.setRowCount(0);
 
@@ -204,15 +212,28 @@ public class StudentApp {
             for (int col = 2; col <= columns; ++col ) {
                 rowData[col-2] = tablePage.get(row, col);
             }
-            model.addRow(rowData);
+            if (filter(rowData)) {
+                model.addRow(rowData);
+            }
         }
     }
 
-    private static void setFilter(JComboBox<String> comboBox, JTextField textField) {
-        textField.setEnabled(false);
-        comboBox.addActionListener(e -> {
-            textField.setEnabled(Objects.equals(comboBox.getSelectedItem(), "Да"));
-        });
+    private static boolean filter(Object[] rowData) {
+        if (!nameField.getText().isEmpty() && !Objects.equals(rowData[1].toString(), nameField.getText())) {
+            return false;
+        }
+        if (!phoneField.getText().isEmpty() && !Objects.equals(rowData[2].toString(), phoneField.getText())) {
+            System.out.println("тел");
+            return false;
+        }
+        if (!tgField.getText().isEmpty() && !Objects.equals(rowData[3].toString(), tgField.getText())) {
+            System.out.println("tg");
+            return false;
+        }
+        if (!emailField.getText().isEmpty() && !Objects.equals(rowData[4].toString(), emailField.getText())) {
+            return false;
+        }
+        return gitField.getText().isEmpty() || Objects.equals(rowData[5].toString(), gitField.getText());
     }
 
     private static void showForm(Student student, String title, Consumer<Student> onSave) {
