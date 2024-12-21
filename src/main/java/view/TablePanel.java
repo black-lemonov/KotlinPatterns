@@ -124,10 +124,24 @@ public class TablePanel extends JPanel {
         });
 
         deleteButton.addActionListener(e -> {
-            int selectedRow = table.getSelectedRow();
-            int id = (int) table.getValueAt(selectedRow, 0);
-            studentList.remove(id);
-            refreshModel();
+            int[] selectedRows = table.getSelectedRows();
+            if (selectedRows.length > 0) {
+                int confirm = JOptionPane.showConfirmDialog(
+                        this,
+                        "Удалить выбранных студентов?",
+                        "Подтвердите действие",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (confirm == JOptionPane.YES_OPTION) {
+                    for (int i = selectedRows.length - 1; i >= 0; i--) {
+                        int id = (int) model.getValueAt(selectedRows[i], 0);
+                        studentList.remove(id);
+                    }
+                    JOptionPane.showMessageDialog(this, "Успешно!");
+                    refreshModel();
+                }
+            }
         });
 
         var pageLbl = new JLabel(Integer.toString(CURRENT_PAGE));
