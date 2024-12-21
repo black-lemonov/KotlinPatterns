@@ -102,6 +102,18 @@ class Student(
         }
     }
 
+    fun validate() {
+        require(
+            this.git?.isNotEmpty() ?: false
+        ) {"Поле git не должно быть пустым"}
+
+        require(
+            this.email?.isNotEmpty() ?: false
+                    || this.tg?.isNotEmpty() ?: false
+                    || this.phone?.isNotEmpty() ?: false
+            ) {"Необходимо заполнить хотя бы одно из полей: телефон, tg, email"}
+    }
+
     override fun compareTo(other: Student): Int {
         return if (this.getSurnameAndInitials() > other.getSurnameAndInitials()) {
             1
