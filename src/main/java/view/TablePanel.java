@@ -15,6 +15,7 @@ public class TablePanel extends JPanel {
     private static DefaultTableModel model;
     private static final StudentList studentList = new StudentListDB();
 
+    private static boolean LAST_PAGE = false;
     private static int CURRENT_PAGE = 1;
     private static final int PAGE_SIZE = 10;
 
@@ -146,9 +147,11 @@ public class TablePanel extends JPanel {
 
         var pageLbl = new JLabel(Integer.toString(CURRENT_PAGE));
         nextPageButton.addActionListener(e -> {
-            CURRENT_PAGE++;
-            pageLbl.setText(Integer.toString(CURRENT_PAGE));
-            refreshModel();
+            if (!LAST_PAGE) {
+                CURRENT_PAGE++;
+                pageLbl.setText(Integer.toString(CURRENT_PAGE));
+                refreshModel();
+            }
         });
 
         prevPageButton.addActionListener(e -> {
@@ -178,9 +181,13 @@ public class TablePanel extends JPanel {
         model.setRowCount(0);
 
         var tablePage = studentList.getByPage(CURRENT_PAGE, PAGE_SIZE).getData();
-        for (int row = 1; row <= tablePage.getRows(); ++row ) {
-            var rowData = new Object[tablePage.getColumns()];
-            for (int col = 2; col <= tablePage.getColumns(); ++col ) {
+        int rows = tablePage.getRows(), columns = tablePage.getColumns();
+
+        LAST_PAGE = rows < PAGE_SIZE;
+
+        for (int row = 1; row <= rows; ++row ) {
+            var rowData = new Object[columns];
+            for (int col = 2; col <= columns; ++col ) {
                 rowData[col-2] = tablePage.get(row, col);
             }
             model.addRow(rowData);
