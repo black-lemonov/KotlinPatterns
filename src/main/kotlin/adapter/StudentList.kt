@@ -11,9 +11,9 @@ interface StudentList {
 
     fun add(student: Student)
 
-    fun replaceById(student: Student, id: Int)
+    fun update(student: Student, id: Int)
 
-    fun removeById(id: Int)
+    fun remove(id: Int)
 
     fun countAll(): Int
 }

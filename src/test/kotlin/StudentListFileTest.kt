@@ -49,11 +49,11 @@ class StudentListFileTest {
     }
 
     @Test fun testRemove() {
-        sl.removeById(4)
+        sl.remove(4)
     }
 
     @Test fun testReplace() {
-        sl.replaceById(
+        sl.update(
             Student(4, "Ризе", "Зинаида", "Георгиевна"),
             4
         )

@@ -22,7 +22,7 @@ class StudentListDBTest {
 
     @Test
     fun testReplace() {
-        db.replaceById(
+        db.update(
             Student(0, "Учиха", "Саске", "Фугаки"),
             8
         )
@@ -30,7 +30,7 @@ class StudentListDBTest {
 
     @Test
     fun testRemove() {
-        db.removeById(9)
+        db.remove(9)
     }
 
     @Test

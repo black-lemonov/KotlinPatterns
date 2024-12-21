@@ -52,12 +52,12 @@ open class StudentListFile : StudentList {
         data.addLast(student)
     }
 
-    override fun replaceById(student: Student, id: Int) {
+    override fun update(student: Student, id: Int) {
         student.id = id
         data.replaceAll { if (it.id == id) student else it }
     }
 
-    override fun removeById(id: Int) {
+    override fun remove(id: Int) {
         data.removeIf { it.id == id }
     }
 

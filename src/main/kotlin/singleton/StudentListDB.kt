@@ -41,7 +41,7 @@ class StudentListDB : StudentList {
         )
     }
 
-    override fun replaceById(student: Student, id: Int) {
+    override fun update(student: Student, id: Int) {
         context.update(
             "student",
             listOf("surname", "name", "lastname", "phone", "tg", "email", "git"),
@@ -50,7 +50,7 @@ class StudentListDB : StudentList {
         )
     }
 
-    override fun removeById(id: Int) {
+    override fun remove(id: Int) {
         context.delete(
             "student",
             "\"id\" = $id"

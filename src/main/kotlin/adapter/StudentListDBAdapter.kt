@@ -20,12 +20,12 @@ class StudentListDBAdapter : StudentList {
         adaptee.add(student)
     }
 
-    override fun replaceById(student: Student, id: Int) {
-        adaptee.replaceById(student, id)
+    override fun update(student: Student, id: Int) {
+        adaptee.update(student, id)
     }
 
-    override fun removeById(id: Int) {
-        adaptee.removeById(id)
+    override fun remove(id: Int) {
+        adaptee.remove(id)
     }
 
     override fun countAll() : Int {
