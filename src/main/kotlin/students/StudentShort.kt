@@ -1,46 +1,40 @@
 package students
 
-import java.sql.ResultSet
+import kotlinx.serialization.Serializable
 
-class StudentShort : StudentBase {
-    override var id : Int
-    private val surnameAndInitials : String
-    override val git : String?
-    private val contacts : String?
-
-    constructor(
-        id : Int,
-        info: String
-    ) {
-        this.id = id
-        val fields = fetchInfo(info)
-        this.surnameAndInitials = fields[0] as String
-        this.git = fields[1]
-        this.contacts = fields[2]
-    }
-
-    constructor(
-        student : Student
-    ) : this(
-        student.id,
-        student.getInfo()
+@Serializable
+class StudentShort(
+    val id: Int,
+    val surnameAndInitials: String,
+    var git: String? = null,
+    val contact: String? = null
+): StudentBase(), Comparable<StudentShort> {
+    constructor(student: Student) : this(
+        id = student.id,
+        info = student.getInfo()
     )
 
-    constructor(
-        rs: ResultSet
-    ) : this(
-        Student(rs)
+    constructor(id: Int, info: String) : this(
+        id = id,
+        surnameAndInitials = info.split(";")[0].trim(),
+        git = info.split(";")[1].trim(),
+        contact = info.split(";")[2].trim()
     )
 
-    private fun fetchInfo(info: String) : List<String?> {
-        return info.split(';').map { it.ifBlank {null} }
+    override fun getContactsInfo(): String = this.contact ?: "Нет контактной информации"
+
+    override fun getSurnameWithInitials(): String = this.surnameAndInitials
+    override fun getGitInfo(): String? = git
+
+    override fun compareTo(other: StudentShort): Int {
+        return if (this.surnameAndInitials > other.surnameAndInitials) {
+            1
+        } else if (this.surnameAndInitials == other.surnameAndInitials) {
+            0
+        } else {
+            -1
+        }
     }
 
-    override fun getSurnameAndInitials(): String {
-        return surnameAndInitials
-    }
-
-    override fun getContactsInfo(): String {
-        return contacts ?: ""
-    }
+    override fun toString(): String = getInfo()
 }

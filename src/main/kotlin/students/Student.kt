@@ -3,176 +3,189 @@ package students
 import kotlinx.serialization.Serializable
 import java.sql.ResultSet
 
-
 @Serializable
 class Student(
-    override var id: Int,
+    var id: Int = 0,
     var surname: String,
-    var name : String,
-    var lastname : String,
-    var phone : String? = null,
-    var tg : String? = null,
-    var email : String? = null,
-    override var git : String? = null
-) : StudentBase(), Comparable<Student> {
+    var name: String,
+    var lastname: String,
+    var tg: String? = null,
+    var git: String? = null
+): StudentBase() {
 
-    init {
-        checkSurname(surname)
-        checkName(name)
-        checkLastname(lastname)
-        checkPhone(phone)
-        checkTg(tg)
-        checkEmail(email)
-//        checkGit(git)
+    var phone: String? = null
+        get() {
+            return field
+        }
+        set(value) {
+            validatePhone(value)
+            field = value
+        }
+
+    var email: String? = null
+        get() {
+            return field
+        }
+        set(value) {
+            validateEmail(value)
+            field = value
+        }
+
+    companion object {
+        private val PHONE_REGEX = Regex("(?:\\+|\\d)[\\d\\-\\(\\) ]{9,}\\d")
+        private val EMAIL_REGEX = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\$")
+
+        fun validatePhone(phoneNumber: String?) {
+            require(!(phoneNumber == null || phoneNumber == "" || PHONE_REGEX.matches(phoneNumber))) {
+                "Неправильный формат телефона: $phoneNumber"
+            }
+        }
+
+        fun validateEmail(email: String?) {
+            require(!(email == null || email == "" || EMAIL_REGEX.matches(email))) {
+                "Неправильный формат почты: $email"
+            }
+        }
     }
 
     constructor(
-        params: Map<String, Any?>
-    ) : this(
-        params["id"].toString().toInt(),
-        params["surname"] as String,
-        params["name"] as String,
-        params["lastname"] as String,
-        params.getOrDefault("phone", null) as? String,
-        params.getOrDefault("tg", null) as? String,
-        params.getOrDefault("email", null) as? String,
-        params.getOrDefault("git", null) as? String
-    )
+        id: Int = 0,
+        surname: String,
+        name: String,
+        lastname: String,
+        phone: String? = null,
+        tg: String? = null,
+        email: String? = null,
+        git: String? = null
+    ) : this(id, surname, name, lastname, tg, git) {
+        this.email = email
+        this.phone = phone
+    }
+
+    constructor() : this(0, "", "", "")
 
     constructor(
-        params: String
+        info: Map<String, Any?>
     ) : this(
-        listOf("id", "surname", "name", "lastname", "phone", "tg", "email", "git")
-            .zip(
-                params.split(',').map {it.ifEmpty {null} }
-            )
-            .toMap()
+        info.getOrDefault("id", 0) as Int,
+        info["surname"].toString(),
+        info["name"].toString(),
+        info["lastname"].toString(),
+        info.getOrDefault("phone", null) as String?,
+        info.getOrDefault("tg", null) as String?,
+        info.getOrDefault("email", null) as String?,
+        info.getOrDefault("git", null) as String?
     )
 
     constructor(
         rs: ResultSet
     ) : this(
-        id = rs.getInt("id"),
-        surname = rs.getString("surname"),
-        name = rs.getString("name"),
-        lastname = rs.getString("lastname"),
-        phone = rs.getString("phone"),
-        tg = rs.getString("tg"),
-        email = rs.getString("email"),
-        git = rs.getString("git")
+        id = rs.getInt("id").toInt(),
+        surname = rs.getString("last_name").toString(),
+        name = rs.getString("first_name").toString(),
+        lastname = rs.getString("middle_name").toString(),
+        tg = rs.getString("tg")?.toString() ?: "",
+        phone = rs.getString("phone")?.toString() ?: "",
+        email = rs.getString("email")?.toString() ?: "",
+        git = rs.getString("git")?.toString() ?: ""
     )
 
-    override fun toString(): String {
-        return "$id,$surname,$name,$lastname,${phone ?: ""},${tg ?: ""},${email ?: ""},${git ?: ""}"
-    }
+    constructor(
+        serializedString: String
+    ) : this(0, "", "", "") {
+        val regex =
+            Regex("Student\\(id=([^,]+), name=([^,]+), surname=([^,]+), lastname=([^,]+), phone=([^,]+), tg=([^,]+), email=([^,]+), git=([^)]*)\\)")
+        val matchResult = regex.find(serializedString)
 
-    override fun getSurnameAndInitials() : String {
-        return "$surname ${name.uppercase().first()}.${lastname.uppercase().first()}."
-    }
+        if (matchResult != null) {
+            this.id = matchResult.groups[1]?.value?.toInt() ?: 0
+            this.name = matchResult.groups[2]?.value ?: ""
+            this.surname = matchResult.groups[3]?.value ?: ""
+            this.lastname = matchResult.groups[4]?.value ?: ""
+            this.phone = matchResult.groups[5]?.value.let { if (it == null || it == "null") null else it }
+            this.tg = matchResult.groups[6]?.value.let { if (it == null || it == "null") null else it }
+            this.email = matchResult.groups[7]?.value.let { if (it == null || it == "null") null else it }
+            this.git = matchResult.groups[8]?.value.let { if (it == null || it == "null") null else it }
 
-    override fun getContactsInfo() : String {
-        if (phone != null) {
-            return "тел: $phone"
-        }
-        if (tg != null) {
-            return "тг: $tg"
-        }
-        if (email != null) {
-            return "почта: $email"
-        }
-        return ""
-    }
+            check(name.isNotBlank()) {
+                "Неправильный формат: имя не может быть пустым"
+            }
+            check(surname.isNotBlank()) {
+                "Неправильный формат: фамилия не может быть пустой"
+            }
+            check(lastname.isNotBlank()) {
+                "Неправильный формат: отчество не может быть пустым"
+            }
 
-    fun setContacts(
-        phone: String? = null,
-        tg: String? = null,
-        email: String? = null
-    ) {
-        if (phone != null) {
-            checkPhone(phone)
-            this.phone = phone
-        }
-        if (tg != null) {
-            checkTg(tg)
-            this.tg = tg
-        }
-        if (email != null) {
-            checkEmail(email)
-            this.email = email
-        }
-    }
-
-    fun validate() {
-        require(
-            this.git?.isNotEmpty() ?: false
-        ) {"Поле git не должно быть пустым"}
-
-        require(
-            this.email?.isNotEmpty() ?: false
-                    || this.tg?.isNotEmpty() ?: false
-                    || this.phone?.isNotEmpty() ?: false
-            ) {"Необходимо заполнить хотя бы одно из полей: телефон, tg, email"}
-    }
-
-    override fun compareTo(other: Student): Int {
-        return if (this.getSurnameAndInitials() > other.getSurnameAndInitials()) {
-            1
-        } else if (this.getSurnameAndInitials() == other.getSurnameAndInitials()) {
-            0
+            check(validate()) {
+                "Неправильный формат: отсутствует гит или контактные данные"
+            }
         } else {
-            -1
+            throw IllegalStateException("Неправильный формат: $serializedString")
         }
     }
 
-    companion object {
-        val PART_OF_NAME_REGEX = Regex("^[А-Яа-яA-Za-z]+$")
-        val PHONE_REGEX = Regex("^(\\+7|8)\\s*\\(?\\d{3}\\)?\\s*\\d{3}[- ]?\\d{2}[- ]?\\d{2}\$")
-        val TG_REGEX = Regex("^(https://t\\.me/[a-zA-Z0-9_]+|tg://resolve\\?domain=[a-zA-Z0-9_]+)$")
-        val EMAIL_REGEX = Regex("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}\$")
-        val GIT_REGEX = Regex("^(https://(www\\.)?(github\\.com|gitlab\\.com)/[a-zA-Z0-9._-]+/[a-zA-Z0-9._-]+)$")
+    override fun toString(): String {
+        return "Student(id=$id, name=$name, surname=$surname, lastname=$lastname, phone=$phone, tg=$tg, email=$email, git=$git)"
+    }
 
-        fun checkSurname(surname: String) {
-            check(PART_OF_NAME_REGEX.matches(surname)) {
-                "Фамилия может содержать только буквы"
-            }
+    /**
+     * Провести валидацию наличия гита и одного из контактов
+     */
+    fun validate(): Boolean {
+
+        return this.git?.isNotEmpty() ?: false &&
+                (
+                        this.email?.isNotEmpty() ?: false ||
+                                this.tg?.isNotEmpty() ?: false ||
+                                this.phone?.isNotEmpty() ?: false
+                        )
+    }
+
+    fun transformEmptyStringsToNull() {
+        if (this.email == "") {
+            this.email = null;
         }
-        fun checkName(name: String) {
-            check(PART_OF_NAME_REGEX.matches(name)) {
-                "Имя может содержать только буквы"
-            }
+        if (this.tg == "") {
+            this.tg = null;
         }
-        fun checkLastname(lastname: String) {
-            check(PART_OF_NAME_REGEX.matches(lastname)) {
-                "Отчество может содержать только буквы"
-            }
+        if (this.phone == "") {
+            this.phone = null;
         }
-        fun checkPhone(phone: String?) {
-            check(
-                phone == null || PHONE_REGEX.matches(phone)
-            ) {
-                "Неправильный формат телефона"
-            }
-        }
-        fun checkTg(tg: String?) {
-            check(
-                tg == null || TG_REGEX.matches(tg)
-            ) {
-                "Неправильная ссылка на телеграм"
-            }
-        }
-        fun checkEmail(email: String?) {
-            check(
-                email == null || EMAIL_REGEX.matches(email)
-            ) {
-                "Неправильно задана почта"
-            }
-        }
-        fun checkGit(git: String?) {
-            check(
-                git == null || GIT_REGEX.matches(git)
-            ) {
-                "Неправильно задан Git"
-            }
+        if (this.git == "") {
+            this.git = null;
         }
     }
+
+    /**
+     * Установить контакты
+     */
+    fun setContacts(email: String?, tg: String?, phone: String?) {
+
+        if (email != null) {
+            this.email = email;
+        }
+
+        if (tg != null) {
+            this.tg = tg;
+        }
+
+        if (phone != null) {
+            this.phone = phone;
+        }
+    }
+
+    /**
+     * Метод для получения информации о способе связи
+     */
+    override fun getContactsInfo(): String {
+        val telegramContact = if (tg != null) "tg: $tg;" else ""
+        val phoneContact = if (phone != null) "Phone: $phone;" else ""
+        val emailContact = if (email != null) "Email: $email;" else ""
+
+        return listOf(telegramContact, phoneContact, emailContact).first { it.isNotEmpty() }
+    }
+
+    override fun getSurnameWithInitials(): String = "$surname ${name.first()}.${lastname.first()}."
+    override fun getGitInfo(): String? = git
 }

@@ -1,14 +1,20 @@
 package students
 
-abstract class StudentBase {
-    abstract val id: Int
-    abstract val git: String?
+import kotlinx.serialization.Serializable
 
-    fun getInfo() : String {
-        return "${getSurnameAndInitials()};${git ?: ""};${getContactsInfo()}"
+@Serializable
+abstract class StudentBase() {
+
+    abstract fun getContactsInfo(): String
+
+    abstract fun getSurnameWithInitials(): String
+
+    abstract fun getGitInfo(): String?
+
+    fun getInfo(): String {
+        val lastNameWithInitials = getSurnameWithInitials()
+        val contactInfo = getContactsInfo()
+        val git = getGitInfo()
+        return "$lastNameWithInitials; $git; $contactInfo"
     }
-
-    abstract fun getSurnameAndInitials() : String
-
-    abstract fun getContactsInfo() : String
 }
