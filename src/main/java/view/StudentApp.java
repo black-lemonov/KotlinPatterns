@@ -10,7 +10,8 @@ import java.awt.*;
 import java.util.Objects;
 import java.util.function.Consumer;
 
-public class TablePanel extends JPanel {
+
+public class StudentApp {
     private static JTable table;
     private static DefaultTableModel model;
     private static final StudentList studentList = new StudentListDB();
@@ -19,15 +20,28 @@ public class TablePanel extends JPanel {
     private static int CURRENT_PAGE = 1;
     private static final int PAGE_SIZE = 10;
 
-    TablePanel() {
-        super(new BorderLayout());
-        addFilters();
-        addTable();
-        refreshModel();
-        addButtons();
+    public static void create() {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Student Manager");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(854, 480);
+
+            JTabbedPane tabbedPane = new JTabbedPane();
+            tabbedPane.add("Список студентов", createTable());
+            tabbedPane.add("Вкладка 2", new JLabel());
+            tabbedPane.add("Вкладка 3", new JLabel());
+
+            frame.add(tabbedPane);
+            frame.setVisible(true);
+        });
     }
 
-    private void addFilters() {
+    public static void main(String[] args) {
+        StudentApp.create();
+    }
+
+    private static JPanel createTable() {
+        JPanel tablePanel = new JPanel(new BorderLayout());
         JPanel filterPanel = new JPanel(new GridLayout(5, 3));
         filterPanel.setBorder(BorderFactory.createTitledBorder("Фильтры"));
 
@@ -64,10 +78,8 @@ public class TablePanel extends JPanel {
         filterPanel.add(gitField);
         setFilter(gitComboBox, gitField);
 
-        this.add(filterPanel, BorderLayout.NORTH);
-    }
+        tablePanel.add(filterPanel, BorderLayout.NORTH);
 
-    private void addTable() {
         String[] columnNames = { "ID", "Фамилия И.О.", "телефон", "tg", "email", "git" };
         model = new DefaultTableModel(columnNames, 0) {
             @Override
@@ -78,10 +90,10 @@ public class TablePanel extends JPanel {
         table = new JTable(model);
         table.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 
-        this.add(new JScrollPane(table), BorderLayout.CENTER);
-    }
+        tablePanel.add(new JScrollPane(table), BorderLayout.CENTER);
 
-    private void addButtons() {
+        refreshModel();
+
         JPanel buttonPanel = new JPanel();
         JButton addButton = new JButton("Добавить");
         JButton editButton = new JButton("Изменить");
@@ -104,7 +116,7 @@ public class TablePanel extends JPanel {
         addButton.addActionListener(e -> {
             showForm(null, "Новый студент", student -> {
                 studentList.add(student);
-                JOptionPane.showMessageDialog(this, "Успешно!");
+                JOptionPane.showMessageDialog(tablePanel, "Успешно!");
                 refreshModel();
             });
         });
@@ -117,7 +129,7 @@ public class TablePanel extends JPanel {
                 if (student != null) {
                     showForm(student, "Изменить студента", updatedStudent -> {
                         studentList.update(updatedStudent, student.getId());
-                        JOptionPane.showMessageDialog(this, "Успешно!");
+                        JOptionPane.showMessageDialog(tablePanel, "Успешно!");
                         refreshModel();
                     });
                 }
@@ -128,7 +140,7 @@ public class TablePanel extends JPanel {
             int[] selectedRows = table.getSelectedRows();
             if (selectedRows.length > 0) {
                 int confirm = JOptionPane.showConfirmDialog(
-                        this,
+                        tablePanel,
                         "Удалить выбранных студентов?",
                         "Подтвердите действие",
                         JOptionPane.YES_NO_OPTION
@@ -139,7 +151,7 @@ public class TablePanel extends JPanel {
                         int id = (int) model.getValueAt(selectedRows[i], 0);
                         studentList.remove(id);
                     }
-                    JOptionPane.showMessageDialog(this, "Успешно!");
+                    JOptionPane.showMessageDialog(tablePanel, "Успешно!");
                     refreshModel();
                 }
             }
@@ -174,7 +186,9 @@ public class TablePanel extends JPanel {
         buttonPanel.add(nextPageButton);
         buttonPanel.add(refreshButton);
 
-        this.add(buttonPanel, BorderLayout.SOUTH);
+        tablePanel.add(buttonPanel, BorderLayout.SOUTH);
+
+        return tablePanel;
     }
 
     private static void refreshModel() {
