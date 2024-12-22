@@ -1,5 +1,6 @@
 package view;
 
+import controllers.StudentCreateController;
 import controllers.StudentListController;
 import filters.StudentFilter;
 import observer.Subscriber;
@@ -112,6 +113,13 @@ public class MainWindow implements Subscriber {
             int selectedRowCount = table.getSelectedRowCount();
             editButton.setEnabled(selectedRowCount == 1);
             deleteButton.setEnabled(selectedRowCount > 0);
+        });
+
+        addButton.addActionListener(e -> {
+            StudentCreateController studentCreateController = new StudentCreateController(this.controller);
+            StudentForm modal = new StudentForm();
+            modal.controller = studentCreateController;
+            modal.create(null, "Добавить студента");
         });
 
         nextPageButton.addActionListener(e -> {
