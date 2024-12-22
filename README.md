@@ -319,3 +319,53 @@ class StudentFileList {
 }
 
 ```
+### Лаб. 7
+#### MVC. Паттерн Наблюдатель.
+```mermaid
+classDiagram
+MainWindow --|>
+namespace Observer {
+Publisher --> Subscriber
+class Publisher {
+<<Interface>>
++MutableList~Subscriber~ subscribers
++addSubscriber(Subscriber subscriber)
++removeSubsriber(Subscriber)
++notifySubscribers()
+}
+class Subscriber {
+<<Interface>>
++update()
+}
+}
+namespace view {
+MainWindow --|> Subscriber
+MainWindow --> StudentListController
+MainWindow --> StudentCreateController
+MainWindow --> StudentUpdateController
+MainWindow --> StudentForm
+class MainWindow {
+-StudentListController controller
+-DataListStudentShort dataList
++update
+-setTableParams()
+-setTableData()
+}
+class StudentForm {
++StudentFormController controller
+}
+}
+namespace controllers {
+MainWindow --> StudentListController
+MainWindow --> StudentCreateController
+MainWindow --> StudentUpdateController
+class StudentListController {
++refeshData()
+}
+class StudentCreateController {}
+class StudentUpdateController {}
+class StudentFormController {}
+}
+class DataListStudentShort {
+}
+```
