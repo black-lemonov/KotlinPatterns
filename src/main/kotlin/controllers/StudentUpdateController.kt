@@ -18,7 +18,7 @@ class StudentUpdateController(
         if (oldStudentData != null) {
             val success = studentList.updateStudent(student)
             if (success) {
-                studentListController.refresh_data()
+                studentListController.refreshData()
                 return "Студент обновлён!"
             } else {
                 return "Ошибка при обновлении студента"

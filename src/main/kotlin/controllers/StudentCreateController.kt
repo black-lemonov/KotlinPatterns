@@ -13,7 +13,7 @@ class StudentCreateController(
     override fun saveProcessedStudent(student: Student, id: Int?): String {
         val id = studentList.addStudent(student)
         if (id > 0) {
-            studentListController.refresh_data()
+            studentListController.refreshData()
             return "Студент добавлен!"
         } else {
             return "Ошибка при добавлении студента."
