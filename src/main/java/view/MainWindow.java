@@ -136,19 +136,50 @@ public class MainWindow implements Subscriber {
             }
         });
 
+        deleteButton.addActionListener(e -> {
+            int[] selectedRows = table.getSelectedRows();
+            if (selectedRows.length > 0) {
+                int confirm = JOptionPane.showConfirmDialog(
+                        panel,
+                        "Удалить выбранных студентов?",
+                        "Подтвердите действие",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (confirm == JOptionPane.YES_OPTION) {
+                    boolean success = true;
+
+                    for (int i = selectedRows.length - 1; i >= 0; i--) {
+                        int id = (int) tableModel.getValueAt(selectedRows[i], 0);
+                        if (!controller.deleteStudent(id)) {
+                            success = false;
+                        }
+                    }
+
+                    if (success) {
+                        JOptionPane.showMessageDialog(panel, "Успешно");
+                    } else {
+                        JOptionPane.showMessageDialog(panel, "При удалении произошла ошибка", "Ошибка", JOptionPane.ERROR_MESSAGE);
+                    }
+
+                    controller.refreshData();
+                }
+            }
+        });
+
         nextPageButton.addActionListener(e -> {
             CURRENT_PAGE++;
-            controller.refresh_data(PAGE_SIZE, CURRENT_PAGE, getCurrentFilter());
+            controller.refreshData(PAGE_SIZE, CURRENT_PAGE, getCurrentFilter());
         });
 
         prevPageButton.addActionListener(e -> {
             if (CURRENT_PAGE > 1) {
                 CURRENT_PAGE--;
-                controller.refresh_data(PAGE_SIZE, CURRENT_PAGE, getCurrentFilter());
+                controller.refreshData(PAGE_SIZE, CURRENT_PAGE, getCurrentFilter());
             }
         });
 
-        refreshButton.addActionListener(e -> controller.refresh_data());
+        refreshButton.addActionListener(e -> controller.refreshData());
 
         buttonPanel.add(addButton);
         buttonPanel.add(editButton);
@@ -178,7 +209,7 @@ public class MainWindow implements Subscriber {
 
         if (lastPage < CURRENT_PAGE) {
             CURRENT_PAGE = lastPage;
-            controller.refresh_data(PAGE_SIZE, CURRENT_PAGE, getCurrentFilter());
+            controller.refreshData(PAGE_SIZE, CURRENT_PAGE, getCurrentFilter());
             return;
         }
 
