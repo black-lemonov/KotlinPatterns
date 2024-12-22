@@ -37,7 +37,7 @@ class StudentListController(studentSourceData: StudentListInterface, private var
         }
     }
 
-    fun refresh_data(pageSize: Int, page: Int, studentFilter: StudentFilter?) {
+    fun refreshData(pageSize: Int, page: Int, studentFilter: StudentFilter?) {
         try {
             dataListStudentShort = studentsList.getKNStudentShortList(k = pageSize, n = page, studentFilter = studentFilter);
             dataListStudentShort?.pagination?.updatePagination(
@@ -53,7 +53,7 @@ class StudentListController(studentSourceData: StudentListInterface, private var
         }
     }
 
-    fun refresh_data() {
+    fun refreshData() {
         val page = dataListStudentShort?.pagination?.currentPage
         val pageSize = dataListStudentShort?.pagination?.perPage
         val studentFilter = studentsList.studentFilter
