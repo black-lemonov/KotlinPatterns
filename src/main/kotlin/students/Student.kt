@@ -1,7 +1,6 @@
 package student
 
 import kotlinx.serialization.Serializable
-import exceptions.ValidateException
 import java.sql.ResultSet
 
 @Serializable
@@ -40,8 +39,8 @@ class Student(
          * Проверить верность номера
          */
         fun validatePhone(phoneNumber: String?) {
-            if (!(phoneNumber == null || phoneNumber == "" || PHONE_REGEX.matches(phoneNumber))) {
-                throw ValidateException("Invalid phone number format: $phoneNumber")
+            check(phoneNumber == null || phoneNumber == "" || PHONE_REGEX.matches(phoneNumber)) {
+                "Invalid phone number format: $phoneNumber"
             }
         }
 
@@ -49,8 +48,8 @@ class Student(
          * Проверить верность почты
          */
         fun validateEmail(email: String?) {
-            if (!(email == null || email == "" || EMAIL_REGEX.matches(email))) {
-                throw ValidateException("Invalid email format: $email")
+            check(email == null || email == "" || EMAIL_REGEX.matches(email)) {
+                "Invalid email format: $email"
             }
         }
     }
@@ -117,21 +116,21 @@ class Student(
             this.email = matchResult.groups[7]?.value.let { if (it == null || it == "null") null else it }
             this.git = matchResult.groups[8]?.value.let { if (it == null || it == "null") null else it }
 
-            if (name.isEmpty()) {
-                throw ValidateException("Invalid student string format: name is empty!")
+            check(name.isNotEmpty()) {
+                "Invalid student string format: name is empty!"
             }
-            if (surname.isEmpty()) {
-                throw ValidateException("Invalid student string format: surname is empty!")
+            check(surname.isNotEmpty()) {
+                "Invalid student string format: surname is empty!"
             }
-            if (lastname.isEmpty()) {
-                throw ValidateException("Invalid student string format: lastname is empty!")
+            check(lastname.isNotEmpty()) {
+                "Invalid student string format: lastname is empty!"
             }
 
-            if (!validate()) {
-                throw ValidateException("Invalid student string format: git or some contact is empty")
+            check(validate()) {
+                "Invalid student string format: git or some contact is empty"
             }
         } else {
-            throw ValidateException("Invalid student string format: $serializedString")
+            throw IllegalStateException("Invalid student string format: $serializedString")
         }
     }
 
