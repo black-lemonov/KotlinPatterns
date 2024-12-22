@@ -1,6 +1,7 @@
-package students
+package student
 
 import kotlinx.serialization.Serializable
+import exceptions.ValidateException
 import java.sql.ResultSet
 
 @Serializable
@@ -35,19 +36,28 @@ class Student(
         private val PHONE_REGEX = Regex("(?:\\+|\\d)[\\d\\-\\(\\) ]{9,}\\d")
         private val EMAIL_REGEX = Regex("^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}\$")
 
+        /**
+         * Проверить верность номера
+         */
         fun validatePhone(phoneNumber: String?) {
-            require(!(phoneNumber == null || phoneNumber == "" || PHONE_REGEX.matches(phoneNumber))) {
-                "Неправильный формат телефона: $phoneNumber"
+            if (!(phoneNumber == null || phoneNumber == "" || PHONE_REGEX.matches(phoneNumber))) {
+                throw ValidateException("Invalid phone number format: $phoneNumber")
             }
         }
 
+        /**
+         * Проверить верность почты
+         */
         fun validateEmail(email: String?) {
-            require(!(email == null || email == "" || EMAIL_REGEX.matches(email))) {
-                "Неправильный формат почты: $email"
+            if (!(email == null || email == "" || EMAIL_REGEX.matches(email))) {
+                throw ValidateException("Invalid email format: $email")
             }
         }
     }
 
+    /**
+     * Конструктор с номером телефона
+     */
     constructor(
         id: Int = 0,
         surname: String,
@@ -81,11 +91,11 @@ class Student(
         rs: ResultSet
     ) : this(
         id = rs.getInt("id").toInt(),
-        surname = rs.getString("last_name").toString(),
-        name = rs.getString("first_name").toString(),
-        lastname = rs.getString("middle_name").toString(),
-        tg = rs.getString("tg")?.toString() ?: "",
+        surname = rs.getString("surname").toString(),
+        name = rs.getString("name").toString(),
+        lastname = rs.getString("lastname").toString(),
         phone = rs.getString("phone")?.toString() ?: "",
+        tg = rs.getString("tg")?.toString() ?: "",
         email = rs.getString("email")?.toString() ?: "",
         git = rs.getString("git")?.toString() ?: ""
     )
@@ -107,21 +117,21 @@ class Student(
             this.email = matchResult.groups[7]?.value.let { if (it == null || it == "null") null else it }
             this.git = matchResult.groups[8]?.value.let { if (it == null || it == "null") null else it }
 
-            check(name.isNotBlank()) {
-                "Неправильный формат: имя не может быть пустым"
+            if (name.isEmpty()) {
+                throw ValidateException("Invalid student string format: name is empty!")
             }
-            check(surname.isNotBlank()) {
-                "Неправильный формат: фамилия не может быть пустой"
+            if (surname.isEmpty()) {
+                throw ValidateException("Invalid student string format: surname is empty!")
             }
-            check(lastname.isNotBlank()) {
-                "Неправильный формат: отчество не может быть пустым"
+            if (lastname.isEmpty()) {
+                throw ValidateException("Invalid student string format: lastname is empty!")
             }
 
-            check(validate()) {
-                "Неправильный формат: отсутствует гит или контактные данные"
+            if (!validate()) {
+                throw ValidateException("Invalid student string format: git or some contact is empty")
             }
         } else {
-            throw IllegalStateException("Неправильный формат: $serializedString")
+            throw ValidateException("Invalid student string format: $serializedString")
         }
     }
 
@@ -133,7 +143,6 @@ class Student(
      * Провести валидацию наличия гита и одного из контактов
      */
     fun validate(): Boolean {
-
         return this.git?.isNotEmpty() ?: false &&
                 (
                         this.email?.isNotEmpty() ?: false ||
@@ -160,7 +169,7 @@ class Student(
     /**
      * Установить контакты
      */
-    fun setContacts(email: String?, tg: String?, phone: String?) {
+    fun setСontacts(email: String?, tg: String?, phone: String?) {
 
         if (email != null) {
             this.email = email;
@@ -178,14 +187,17 @@ class Student(
     /**
      * Метод для получения информации о способе связи
      */
-    override fun getContactsInfo(): String {
+    override fun getContactInfo(): String {
         val telegramContact = if (tg != null) "tg: $tg;" else ""
-        val phoneContact = if (phone != null) "Phone: $phone;" else ""
-        val emailContact = if (email != null) "Email: $email;" else ""
+        val phoneContact = if (phone != null) "тел: $phone;" else ""
+        val emailContact = if (email != null) "email: $email;" else ""
 
         return listOf(telegramContact, phoneContact, emailContact).first { it.isNotEmpty() }
     }
 
     override fun getSurnameWithInitials(): String = "$surname ${name.first()}.${lastname.first()}."
+
+    fun getFullName(): String = "$surname $name $lastname"
+
     override fun getGitInfo(): String? = git
 }
