@@ -111,7 +111,7 @@ class StudentListDB(
 
     private fun buildFilterQuery(studentFilter: StudentFilter): String {
         var query = "WHERE (TRUE"
-        val nameFilter = studentFilter.surnameAndInitialsFilter
+        val nameFilter = studentFilter.nameFilter
         if (nameFilter.isNotEmpty()) query += " AND surname || ' ' || name like '%$nameFilter%'"
         query = mutateQueryWithFilter(
             query,

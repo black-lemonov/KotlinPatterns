@@ -83,7 +83,7 @@ class StudentListFile(
             return true;
         }
 
-        if (studentFilter!!.surnameAndInitialsFilter.isNotEmpty() && !student.getFullName().contains(studentFilter!!.surnameAndInitialsFilter)) {
+        if (studentFilter!!.nameFilter.isNotEmpty() && !student.getFullName().contains(studentFilter!!.nameFilter)) {
             return false;
         } else if (
             !filterValueAndSearchParam(student.email, studentFilter!!.emailFilter, studentFilter!!.emailSearch) ||

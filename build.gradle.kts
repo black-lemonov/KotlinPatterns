@@ -17,6 +17,9 @@ dependencies {
     implementation("org.xerial:sqlite-jdbc:3.47.0.0")
     implementation("org.slf4j:slf4j-reload4j:2.0.16")
     testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.0")
+    testImplementation("org.mockito:mockito-core:5.6.0")
+    testImplementation("org.mockito:mockito-junit-jupiter:5.6.0")
 }
 
 tasks.test {

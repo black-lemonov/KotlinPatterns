@@ -3,7 +3,7 @@ package filters
 import enums.SearchParam
 
 data class StudentFilter(
-    val surnameAndInitialsFilter: String,
+    val nameFilter: String,
     val gitFilter: String,
     val emailFilter: String,
     val phoneFilter: String,
