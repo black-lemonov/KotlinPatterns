@@ -2,8 +2,10 @@ package view;
 
 import controllers.StudentCreateController;
 import controllers.StudentListController;
+import controllers.StudentUpdateController;
 import filters.StudentFilter;
 import observer.Subscriber;
+import student.Student;
 import template.DataListStudentShort;
 import student.StudentShort;
 
@@ -120,6 +122,18 @@ public class MainWindow implements Subscriber {
             StudentForm modal = new StudentForm();
             modal.controller = studentCreateController;
             modal.create(null, "Добавить студента");
+        });
+
+        editButton.addActionListener(e -> {
+            StudentUpdateController studentUpdateController = new StudentUpdateController(this.controller);
+            StudentForm modal = new StudentForm();
+            modal.controller = studentUpdateController;
+            int selectedRow = table.getSelectedRow();
+            if (selectedRow >= 0) {
+                int id = (int) tableModel.getValueAt(selectedRow, 0);
+                Student student = studentUpdateController.getStudentById(id);
+                modal.create(student, "Изменить студента");
+            }
         });
 
         nextPageButton.addActionListener(e -> {
