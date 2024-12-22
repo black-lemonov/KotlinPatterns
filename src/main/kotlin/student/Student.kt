@@ -168,7 +168,7 @@ class Student(
     /**
      * Установить контакты
      */
-    fun setСontacts(email: String?, tg: String?, phone: String?) {
+    fun setContacts(email: String?, tg: String?, phone: String?) {
 
         if (email != null) {
             this.email = email;
