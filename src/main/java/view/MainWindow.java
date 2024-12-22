@@ -3,6 +3,7 @@ package view;
 import controllers.StudentCreateController;
 import controllers.StudentListController;
 import controllers.StudentUpdateController;
+import enums.SearchParam;
 import filters.StudentFilter;
 import observer.Subscriber;
 import student.Student;
@@ -17,10 +18,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 public class MainWindow implements Subscriber {
 
-    private static final int PAGE_SIZE = 20;
+    private static final int PAGE_SIZE = 10;
     private static int CURRENT_PAGE = 1;
 
     private StudentListController controller;
@@ -79,6 +81,7 @@ public class MainWindow implements Subscriber {
 
     private JPanel createStudentTab() {
         JPanel panel = new JPanel(new BorderLayout());
+        addFilters(panel);
 
         String[] columnNames = dataList.getEntityFields().toArray(new String[0]);
         tableModel = new DefaultTableModel(columnNames, 0) {
@@ -179,7 +182,7 @@ public class MainWindow implements Subscriber {
             }
         });
 
-        refreshButton.addActionListener(e -> controller.refreshData());
+        refreshButton.addActionListener(e -> updateFilterInfo());
 
         buttonPanel.add(addButton);
         buttonPanel.add(editButton);
@@ -247,5 +250,80 @@ public class MainWindow implements Subscriber {
         dialog.setSize(569, 320);
         dialog.setLayout(new GridLayout(7, 2));
         JOptionPane.showMessageDialog(dialog, message, "Ошибка", JOptionPane.ERROR_MESSAGE);
+    }
+
+    public void updateFilterInfo() {
+        String nameFilter = nameField.getText().trim();
+        SearchParam gitSearch = SearchParam.create(
+                (String) Objects.requireNonNull(gitComboBox.getSelectedItem())
+        );
+        String gitFilter = gitField.getText().trim();
+        SearchParam emailSearch = SearchParam.create(
+                (String) Objects.requireNonNull(emailComboBox.getSelectedItem())
+        );
+        String emailFilter = emailField.getText().trim();
+
+        SearchParam phoneSearch = SearchParam.create(
+                (String) Objects.requireNonNull(phoneComboBox.getSelectedItem())
+        );
+        String phoneFilter = phoneField.getText().trim();
+
+        SearchParam tgSearch = SearchParam.create(
+                (String) Objects.requireNonNull(tgComboBox.getSelectedItem())
+        );
+        String tgFilter = tgField.getText().trim();
+
+        StudentFilter studentFilter = new StudentFilter(
+                nameFilter,
+                gitFilter,
+                emailFilter,
+                phoneFilter,
+                tgFilter,
+                gitSearch,
+                phoneSearch,
+                tgSearch,
+                emailSearch
+        );
+
+        controller.refreshData(PAGE_SIZE, CURRENT_PAGE, studentFilter);
+    }
+
+    private void addFilters(JPanel panel) {
+        JPanel filterPanel = new JPanel(new GridLayout(5, 3));
+        filterPanel.setBorder(BorderFactory.createTitledBorder("Фильтры"));
+
+        setupFilter(gitComboBox, gitField);
+        setupFilter(emailComboBox, emailField);
+        setupFilter(phoneComboBox, phoneField);
+        setupFilter(tgComboBox, tgField);
+
+        filterPanel.add(new JLabel("Фамилия И.О."));
+        filterPanel.add(nameField);
+        filterPanel.add(new JLabel());
+
+        filterPanel.add(new JLabel("git"));
+        filterPanel.add(gitComboBox);
+        filterPanel.add(gitField);
+
+        filterPanel.add(new JLabel("email"));
+        filterPanel.add(emailComboBox);
+        filterPanel.add(emailField);
+
+        filterPanel.add(new JLabel("телефон"));
+        filterPanel.add(phoneComboBox);
+        filterPanel.add(phoneField);
+
+        filterPanel.add(new JLabel("tg"));
+        filterPanel.add(tgComboBox);
+        filterPanel.add(tgField);
+
+        panel.add(filterPanel, BorderLayout.NORTH);
+    }
+
+    private static void setupFilter(JComboBox<String> comboBox, JTextField textField) {
+        textField.setEnabled(false);
+        comboBox.addActionListener(e -> {
+            textField.setEnabled(Objects.equals(comboBox.getSelectedItem(), "Да"));
+        });
     }
 }
