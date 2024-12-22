@@ -2,17 +2,17 @@ package template
 
 import observer.Publisher
 import observer.Subscriber
-import students.Student
-import students.StudentShort
-
+import student.Student
+import student.StudentShort
 
 class DataListStudentShort(students: List<StudentShort>) : DataList<StudentShort>(students), Publisher {
+
+    constructor(studentsList: List<Student>, count: Int) : this(studentsList.map { StudentShort(it) })
+
     override val subscribers: MutableList<Subscriber> = mutableListOf()
 
-    constructor(fullStudents: List<Student>) : this(students = fullStudents.map { StudentShort(it) })
-
     override fun getEntityFields(): List<String> {
-        return listOf("ID", "Имя", "Гит", "Контакт")
+        return listOf("ID", "Фамилия И.О.", "git", "контакт")
     }
 
     override fun getDataRow(entity: StudentShort): List<Any> {

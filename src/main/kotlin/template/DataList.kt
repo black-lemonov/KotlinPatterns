@@ -1,7 +1,11 @@
 package template
 
+import database.Pagination
+
 abstract class DataList<T : Comparable<T>>(protected var elements: List<T>) {
     private val selectedIndices = mutableSetOf<Int>()
+
+    val pagination: Pagination = Pagination()
 
     init {
         elements.sorted()
