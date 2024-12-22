@@ -3,11 +3,15 @@ package observer
 interface Publisher {
     val subscribers: MutableList<Subscriber>
 
-    fun notifyAll() {
-        subscribers.forEach { it.update() }
+    fun addSubscriber(subscriber: Subscriber) {
+        subscribers.add(subscriber)
     }
 
-    fun addSubscriber(subscriber: Subscriber)
+    fun removeSubscriber(subscriber: Subscriber) {
+        subscribers.remove(subscriber)
+    }
 
-    fun removeSubscriber(subscriber: Subscriber)
+    fun notifySubscribers() {
+        subscribers.forEach { it.update() }
+    }
 }
