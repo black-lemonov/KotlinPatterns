@@ -1,10 +1,12 @@
+import adapter.StudentListFileAdapter
 import controllers.StudentListController
-import strategy.StudentListDB
+import strategy.StudentListFile
+import strategy.strategies.StudentYamlFileProcessor
 import view.MainWindow
 
 fun main() {
     val view = MainWindow()
-    val studentListDB = StudentListDB()
-    val controller = StudentListController(studentListDB, view)
+    val studentList = StudentListFileAdapter(StudentListFile("./src/main/resources/students.yaml", StudentYamlFileProcessor()))
+    val controller = StudentListController(studentList, view)
     view.create(controller)
 }
