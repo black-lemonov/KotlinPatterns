@@ -38,7 +38,7 @@ class SQLiteDB private constructor(): DBInterface {
         if (connection != null) {
             return
         }
-        val url = "jdbc:postgresql://$path"
+        val url = "jdbc:sqlite:$path"
 
         connection = DriverManager.getConnection(url)
     }
