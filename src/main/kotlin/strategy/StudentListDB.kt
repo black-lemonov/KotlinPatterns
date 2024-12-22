@@ -1,12 +1,14 @@
 package singleton
 
-import adapter.StudentList
+import strategy.StudentList
+import filters.StudentFilter
 import students.Student
+import students.StudentShort
 import template.DataList
-import template.DataListStudent
+import template.DataListStudentShort
 
 
-class StudentListDB : StudentList {
+class StudentListDB(override var filter: StudentFilter?) : StudentList {
     private val context = DBContext
 
     init {
@@ -19,18 +21,18 @@ class StudentListDB : StudentList {
     }
 
     override fun getByPage(
-        page : Int, number : Int
-    ) : DataList<Student> {
+        page : Int, pageSize : Int
+    ) : DataList<StudentShort> {
         require(page > 0) { "page must be > 0" }
-        val result = context.select("*",  "student", number, number * (page-1))
+        val result = context.select("*",  "student", pageSize, pageSize * (page-1))
         if (result != null) {
-            return DataListStudent(
+            return DataListStudentShort(
                 generateSequence {
-                    if (result.next()) Student(result) else null
+                    if (result.next()) StudentShort(Student(result)) else null
                 }.toMutableList()
             )
         }
-        return DataListStudent(mutableListOf())
+        return DataListStudentShort(mutableListOf())
     }
 
     override fun add(student: Student) {
@@ -62,5 +64,4 @@ class StudentListDB : StudentList {
         return res ?: 0
     }
 }
-
 
