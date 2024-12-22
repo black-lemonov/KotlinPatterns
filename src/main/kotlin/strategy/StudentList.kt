@@ -2,7 +2,7 @@ package strategy
 
 import adapter.StudentListInterface
 import filters.StudentFilter
-import template.student.DataListStudentShort
+import template.DataListStudentShort
 import student.Student
 
 class StudentList(private val studentSource: StudentListInterface) {

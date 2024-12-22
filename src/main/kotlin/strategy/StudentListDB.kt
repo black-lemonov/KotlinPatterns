@@ -5,7 +5,7 @@ import database.DBInterface
 import database.SQLiteDB
 import filters.StudentFilter
 import enums.SearchParam
-import template.student.DataListStudentShort
+import template.DataListStudentShort
 import student.Student
 import student.StudentShort
 import java.sql.SQLException

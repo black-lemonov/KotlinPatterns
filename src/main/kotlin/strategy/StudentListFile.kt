@@ -3,7 +3,7 @@ package strategy
 import filters.StudentFilter
 import enums.SearchParam
 import template.DataList
-import template.student.DataListStudentShort
+import template.DataListStudentShort
 import strategy.strategies.StudentFileProcessor
 import strategy.strategies.StudentTxtFileProcessor
 import student.Student
