@@ -1,7 +1,7 @@
 package adapter
 
 import filters.StudentFilter
-import template.student.DataListStudentShort
+import template.DataListStudentShort
 import strategy.StudentListFile
 import student.Student
 
