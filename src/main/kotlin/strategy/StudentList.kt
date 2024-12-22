@@ -1,26 +1,39 @@
-package adapter
+package strategy
 
+import adapter.StudentListInterface
 import filters.StudentFilter
-import students.Student
-import students.StudentShort
-import template.DataList
+import template.student.DataListStudentShort
+import student.Student
 
-interface StudentList {
-    var filter: StudentFilter?
+class StudentList(private val studentSource: StudentListInterface) {
 
-    fun setFilter(filter: StudentFilter?) {
-        this.filter = filter
+    var studentFilter: StudentFilter? = null
+
+    fun getStudentById(id: Int): Student? {
+        return studentSource.getStudentById(id)
     }
 
-    fun get(id: Int) : Student?
+    fun getKNStudentShortList(k: Int, n: Int, studentFilter: StudentFilter? = null): DataListStudentShort {
+        this.studentFilter = studentFilter
+        if (studentFilter != null) {
+            this.studentSource.initStudentFilter(studentFilter)
+        }
+        return studentSource.getKNStudentShortList(k, n)
+    }
 
-    fun getByPage(page : Int, pageSize : Int) : DataList<StudentShort>
+    fun addStudent(student: Student): Int {
+        return studentSource.addStudent(student)
+    }
 
-    fun add(student: Student)
+    fun updateStudent(student: Student): Boolean {
+        return studentSource.updateStudent(student)
+    }
 
-    fun update(student: Student, id: Int)
+    fun deleteStudent(id: Int): Boolean {
+        return studentSource.deleteStudent(id)
+    }
 
-    fun remove(id: Int)
-
-    fun countAll(): Int
+    fun getStudentCount(): Int {
+        return studentSource.getStudentCount()
+    }
 }
