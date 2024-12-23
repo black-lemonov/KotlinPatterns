@@ -1,5 +1,6 @@
 package view;
 
+import com.formdev.flatlaf.FlatLightLaf;
 import controllers.StudentCreateController;
 import controllers.StudentListController;
 import controllers.StudentUpdateController;
@@ -63,6 +64,11 @@ public class MainWindow implements Subscriber {
     private final JButton deleteButton = new JButton("Удалить");
 
     public void create(StudentListController controller) {
+        try {
+            UIManager.setLookAndFeel(new FlatLightLaf());
+        } catch (UnsupportedLookAndFeelException e) {
+            System.out.println("Не удалось загрузить FlatLightLaf:(");
+        }
         setController(controller);
         controller.firstInitDataList();
         SwingUtilities.invokeLater(() -> {
@@ -81,7 +87,9 @@ public class MainWindow implements Subscriber {
 
     private JPanel createStudentTab() {
         JPanel panel = new JPanel(new BorderLayout());
-        addFilters(panel);
+        panel.setBorder(
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        );
 
         String[] columnNames = dataList.getEntityFields().toArray(new String[0]);
         tableModel = new DefaultTableModel(columnNames, 0) {
@@ -193,6 +201,7 @@ public class MainWindow implements Subscriber {
         buttonPanel.add(refreshButton);
 
         panel.add(scrollPane, BorderLayout.CENTER);
+        addFilters(panel);
         panel.add(buttonPanel, BorderLayout.SOUTH);
 
         return panel;
@@ -289,7 +298,7 @@ public class MainWindow implements Subscriber {
     }
 
     private void addFilters(JPanel panel) {
-        JPanel filterPanel = new JPanel(new GridLayout(5, 3));
+        JPanel filterPanel = new JPanel(new GridLayout(5, 3, 5, 5));
         filterPanel.setBorder(BorderFactory.createTitledBorder("Фильтры"));
 
         setupFilter(gitComboBox, gitField);

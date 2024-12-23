@@ -14,7 +14,10 @@ public class StudentForm {
     public void create(Student existingStudent, String title) {
         JDialog dialog = new JDialog((Frame) null, title, true);
         dialog.setSize(569, 320);
-        dialog.setLayout(new GridLayout(7, 2));
+        dialog.setLayout(new GridLayout(7, 2, 5, 5));
+        dialog.getRootPane().setBorder(
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        );
 
         JTextField surnameField = new JTextField(existingStudent != null ? existingStudent.getSurname() : "");
         JTextField nameField = new JTextField(existingStudent != null ? existingStudent.getName() : "");
